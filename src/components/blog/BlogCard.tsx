@@ -29,9 +29,15 @@ export function BlogCard({ post }: BlogCardProps) {
   return (
     <Card className="group h-full w-full overflow-hidden border-gray-100 p-0 shadow-none transition-all dark:border-gray-800">
       <CardHeader className="p-0">
-        <div className="relative aspect-video overflow-hidden">
+        <div className="relative aspect-video overflow-hidden rounded-t-lg">
           <Link href={`/blog/${slug}`}>
-            <Image src={image} alt={title} fill className="object-cover" />
+            <Image
+              src={post.frontmatter.image}
+              alt={post.frontmatter.title}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
           </Link>
         </div>
       </CardHeader>

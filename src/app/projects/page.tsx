@@ -2,8 +2,10 @@ import Container from '@/components/common/Container';
 import { ProjectList } from '@/components/projects/ProjectList';
 import { Separator } from '@/components/ui/separator';
 import { generateMetadata as getMetadata } from '@/config/Meta';
-import { projects } from '@/config/Projects';
+import { getProjectsData, getSettings } from '@/lib/content';
+import { getIcon } from '@/lib/mapper';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   ...getMetadata('/projects'),
@@ -20,7 +22,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const settings = await getSettings();
+  if (!settings.sections.projects) {
+    redirect('/');
+  }
+
+  const projectsData = await getProjectsData();
+  const projects = projectsData.map((project: any) => ({
+    ...project,
+    technologies: project.technologies.map((tech: any) => ({
+      ...tech,
+      icon: getIcon(tech.icon),
+    })),
+  }));
+
   return (
     <Container className="py-16">
       <div className="space-y-8">

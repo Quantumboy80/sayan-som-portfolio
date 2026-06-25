@@ -27,8 +27,16 @@ interface ProjectCardProps {
   project: Project;
 }
 
+function getYouTubeEmbedUrl(url: string): string | null {
+  const ytMatch = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/,
+  );
+  return ytMatch ? `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1` : null;
+}
+
 export function ProjectCard({ project }: ProjectCardProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const youtubeEmbedUrl = project.video ? getYouTubeEmbedUrl(project.video) : null;
 
   return (
     <Card className="group h-full w-full overflow-hidden border-gray-100 p-0 shadow-none transition-all dark:border-gray-800">
@@ -52,13 +60,23 @@ export function ProjectCard({ project }: ProjectCardProps) {
               </DialogTrigger>
               <DialogContent className="w-full max-w-4xl border-0 p-0">
                 <div className="aspect-video w-full">
-                  <video
-                    className="h-full w-full rounded-lg object-cover"
-                    src={project.video}
-                    autoPlay
-                    loop
-                    controls
-                  />
+                  {youtubeEmbedUrl ? (
+                    <iframe
+                      className="h-full w-full rounded-lg"
+                      src={youtubeEmbedUrl}
+                      title={project.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <video
+                      className="h-full w-full rounded-lg object-cover"
+                      src={project.video}
+                      autoPlay
+                      loop
+                      controls
+                    />
+                  )}
                 </div>
                 <DialogTitle className="sr-only">{project.title}</DialogTitle>
               </DialogContent>

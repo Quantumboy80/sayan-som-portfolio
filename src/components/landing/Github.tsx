@@ -25,11 +25,11 @@ type GitHubContributionResponse = {
   date: string;
   contributionCount: number;
   contributionLevel:
-    | 'NONE'
-    | 'FIRST_QUARTILE'
-    | 'SECOND_QUARTILE'
-    | 'THIRD_QUARTILE'
-    | 'FOURTH_QUARTILE';
+  | 'NONE'
+  | 'FIRST_QUARTILE'
+  | 'SECOND_QUARTILE'
+  | 'THIRD_QUARTILE'
+  | 'FOURTH_QUARTILE';
 };
 
 // Helper function to filter contributions to past year
@@ -128,7 +128,8 @@ export default function Github() {
               {githubConfig.title}
             </h2>
             <p className="text-muted-foreground text-sm">
-              <b>{githubConfig.username}</b>&apos;s {githubConfig.subtitle}
+              <b>{githubConfig.displayName ?? githubConfig.username}</b>&apos;s{' '}
+              {githubConfig.subtitle}
             </p>
             {!isLoading && !hasError && totalContributions > 0 && (
               <p className="text-primary mt-1 text-sm font-medium">

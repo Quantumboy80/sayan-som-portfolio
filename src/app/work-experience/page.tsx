@@ -1,10 +1,12 @@
 import Container from '@/components/common/Container';
 import { ExperienceList } from '@/components/experience/ExperienceList';
 import { Separator } from '@/components/ui/separator';
-import { experiences } from '@/config/Experience';
 import { generateMetadata as getMetadata } from '@/config/Meta';
+import { getExperienceData, getSettings } from '@/lib/content';
+import { getIcon } from '@/lib/mapper';
 import { Metadata } from 'next';
 import { Robots } from 'next/dist/lib/metadata/types/metadata-types';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   ...getMetadata('/work-experience'),
@@ -21,16 +23,30 @@ export const metadata: Metadata = {
   } as Robots,
 };
 
-export default function WorkExperiencePage() {
+export default async function WorkExperiencePage() {
+  const settings = await getSettings();
+  if (!settings.sections.experience) {
+    redirect('/');
+  }
+
+  const experienceData = await getExperienceData();
+  const experiences = experienceData.map((exp: any) => ({
+    ...exp,
+    technologies: exp.technologies.map((tech: any) => ({
+      ...tech,
+      icon: getIcon(tech.icon),
+    })),
+  }));
+
   return (
     <Container className="py-16">
       <div className="space-y-8">
         {/* Header */}
-        <div className="space-y-4 text-center">
-          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight lg:text-4xl">
             Work Experience
           </h1>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
+          <p className="text-muted-foreground text-base">
             My work experiences across different companies and roles.
           </p>
         </div>
@@ -38,21 +54,7 @@ export default function WorkExperiencePage() {
         <Separator />
 
         {/* Work Experiences */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">
-              All Experiences
-              {experiences.length > 0 && (
-                <span className="text-muted-foreground ml-2 text-sm font-normal">
-                  ({experiences.length}{' '}
-                  {experiences.length === 1 ? 'experience' : 'experiences'})
-                </span>
-              )}
-            </h2>
-          </div>
-
-          <ExperienceList experiences={experiences} />
-        </div>
+        <ExperienceList experiences={experiences} />
       </div>
     </Container>
   );

@@ -31,7 +31,7 @@ interface Message {
 const initialMessages: Message[] = [
   {
     id: 1,
-    text: "Hello! I'm Ram's Portfolio Assistant. How can I help you?",
+    text: "Hello! I'm Sayan's Portfolio Assistant. How can I help you?",
     sender: 'bot',
     timestamp: new Date().toLocaleTimeString([], {
       hour: '2-digit',
@@ -41,11 +41,27 @@ const initialMessages: Message[] = [
 ];
 
 const ChatBubble: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [mounted, setMounted] = useState(false);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { triggerHaptic, isMobile } = useHapticFeedback();
+
+  useEffect(() => {
+    setMounted(true);
+    setMessages([
+      {
+        id: 1,
+        text: `Hello! I'm ${heroConfig.name}'s Portfolio Assistant. How can I help you?`,
+        sender: 'bot',
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      },
+    ]);
+  }, []);
 
   // Auto-scroll to bottom when new messages are added
   useEffect(() => {
@@ -234,10 +250,10 @@ const ChatBubble: React.FC = () => {
         prev.map((msg) =>
           msg.id === botMessageId
             ? {
-                ...msg,
-                text: "I'm sorry, I'm having trouble responding right now. Please try again later.",
-                isStreaming: false,
-              }
+              ...msg,
+              text: "I'm sorry, I'm having trouble responding right now. Please try again later.",
+              isStreaming: false,
+            }
             : msg,
         ),
       );
@@ -246,6 +262,8 @@ const ChatBubble: React.FC = () => {
       setNewMessage('');
     }
   };
+
+  if (!mounted) return null;
 
   return (
     <ExpandableChat
@@ -257,7 +275,7 @@ const ChatBubble: React.FC = () => {
       <ExpandableChatHeader>
         <div className="flex items-center space-x-3">
           <Avatar className="border-primary h-8 w-8 border-2 bg-blue-300 dark:bg-yellow-300">
-            <AvatarImage src="/assets/logo.png" alt="Assistant" />
+            <AvatarImage src="/assets/luffy_avatar.jpg" alt="Assistant" />
             <AvatarFallback>AI</AvatarFallback>
           </Avatar>
           <div>
@@ -290,7 +308,7 @@ const ChatBubble: React.FC = () => {
                 <div className="flex items-start space-x-2">
                   {message.sender === 'bot' && (
                     <Avatar className="border-primary h-6 w-6 border-2 bg-blue-300 dark:bg-yellow-300">
-                      <AvatarImage src="/assets/logo.png" alt="Assistant" />
+                      <AvatarImage src="/assets/luffy_avatar.jpg" alt="Assistant" />
                       <AvatarFallback>AI</AvatarFallback>
                     </Avatar>
                   )}

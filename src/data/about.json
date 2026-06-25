@@ -1,0 +1,17 @@
+{
+  "skills": [
+    "ReactIcon",
+    "Bun",
+    "JavaScript",
+    "TypeScript",
+    "MongoDB",
+    "NextJs",
+    "NodeJs",
+    "PostgreSQL",
+    "Prisma"
+  ],
+  "about": {
+    "name": "sayan som",
+    "description": "I’m a tech enthusiast who loves to learn and build projects. I enjoy solving real-world problems."
+  }
+}

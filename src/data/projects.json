@@ -1,0 +1,469 @@
+[
+    {
+        "title": "Meeting Action Hub",
+        "description": "AI-powered meeting action item extractor that automatically processes meeting transcripts, extracts actionable tasks using an LLM, and syncs them directly to Notion via MCP server integration.",
+        "image": "/project/meeting-action-hub.png",
+        "video": "",
+        "link": "https://github.com/Quantumboy80/meeting-action-hub",
+        "technologies": [
+            {
+                "name": "HTML",
+                "icon": "Html"
+            },
+            {
+                "name": "CSS",
+                "icon": "CSS"
+            },
+            {
+                "name": "JavaScript",
+                "icon": "JavaScript"
+            },
+            {
+                "name": "Notion",
+                "icon": "Notion"
+            }
+        ],
+        "github": "https://github.com/Quantumboy80/meeting-action-hub",
+        "live": "https://github.com/Quantumboy80/meeting-action-hub",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/meeting-action-hub",
+        "isWorking": true
+    },
+    {
+        "title": "NotesBuddy",
+        "description": "A comprehensive study platform with notes, flashcards, quizzes, AI chatbot, and interactive learning tools",
+        "image": "/project/notesbuddy.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/notesbuddy.mp4?tr=orig",
+        "link": "https://notesbuddy.in",
+        "technologies": [
+            {
+                "name": "Next.js",
+                "icon": "NextJs"
+            },
+            {
+                "name": "TypeScript",
+                "icon": "TypeScript"
+            },
+            {
+                "name": "React",
+                "icon": "ReactIcon"
+            },
+            {
+                "name": "Vercel",
+                "icon": "Vercel"
+            },
+            {
+                "name": "MongoDB",
+                "icon": "MongoDB"
+            },
+            {
+                "name": "Tailwind CSS",
+                "icon": "TailwindCss"
+            },
+            {
+                "name": "shadcn/ui",
+                "icon": "Shadcn"
+            },
+            {
+                "name": "MDX",
+                "icon": "MDXIcon"
+            }
+        ],
+        "github": "https://github.com/ramxcodes/notesbuddy",
+        "live": "https://notesbuddy.in",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/notesbuddy",
+        "isWorking": true
+    },
+    {
+        "title": "Appwrite MCP Server",
+        "description": "Model Context Protocol server for seamless Appwrite database operations with 7 powerful tools and 99.9% success rate",
+        "image": "/project/appwrite.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/appwrite.mp4",
+        "link": "https://mcp.ramx.in/",
+        "technologies": [
+            {
+                "name": "TypeScript",
+                "icon": "TypeScript"
+            },
+            {
+                "name": "Bun",
+                "icon": "Bun"
+            },
+            {
+                "name": "Vercel",
+                "icon": "Vercel"
+            },
+            {
+                "name": "Appwrite",
+                "icon": "Appwrite"
+            }
+        ],
+        "github": "https://github.com/ramxcodes/mcp-server",
+        "live": "https://mcp.ramx.in/",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/appwrite-mcp-server",
+        "isWorking": true
+    },
+    {
+        "title": "Syncify",
+        "description": "Real-time music streaming platform with synchronized playback, live chat, and social listening features",
+        "image": "/project/syncify.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/syncify.mp4",
+        "link": "https://syncify.rocks",
+        "technologies": [
+            {
+                "name": "React",
+                "icon": "ReactIcon"
+            },
+            {
+                "name": "Node.js",
+                "icon": "NodeJs"
+            },
+            {
+                "name": "MongoDB",
+                "icon": "MongoDB"
+            },
+            {
+                "name": "Vercel",
+                "icon": "Vercel"
+            },
+            {
+                "name": "Tailwind CSS",
+                "icon": "TailwindCss"
+            },
+            {
+                "name": "shadcn/ui",
+                "icon": "Shadcn"
+            },
+            {
+                "name": "Socket.io",
+                "icon": "SocketIo"
+            }
+        ],
+        "github": "https://github.com/ramxcodes/syncify",
+        "live": "https://syncify.rocks",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/syncify",
+        "isWorking": true
+    },
+    {
+        "title": "Pasandida Aurat",
+        "description": "Innovative dating platform featuring anonymous questions and authentic connections - currently in development",
+        "image": "/project/pasandida.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/pasandida.mp4",
+        "link": "https://www.pasandidaurat.com/",
+        "technologies": [
+            {
+                "name": "Next.js",
+                "icon": "NextJs"
+            },
+            {
+                "name": "TypeScript",
+                "icon": "TypeScript"
+            },
+            {
+                "name": "Prisma",
+                "icon": "Prisma"
+            },
+            {
+                "name": "PostgreSQL",
+                "icon": "PostgreSQL"
+            },
+            {
+                "name": "Tailwind CSS",
+                "icon": "TailwindCss"
+            },
+            {
+                "name": "Socket.io",
+                "icon": "SocketIo"
+            }
+        ],
+        "live": "https://www.pasandidaurat.com/",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/pasandida-aurat",
+        "isWorking": false
+    },
+    {
+        "title": "The Quest",
+        "description": "Personal challenge tracker for completing 500 DSA problems, earning ₹300,000, and improving fitness within 6 months",
+        "image": "/project/quest.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/quest.mp4",
+        "link": "https://quest.ramx.in/",
+        "technologies": [
+            {
+                "name": "Next.js",
+                "icon": "NextJs"
+            },
+            {
+                "name": "TypeScript",
+                "icon": "TypeScript"
+            },
+            {
+                "name": "Vercel",
+                "icon": "Vercel"
+            },
+            {
+                "name": "Tailwind CSS",
+                "icon": "TailwindCss"
+            },
+            {
+                "name": "MDX",
+                "icon": "MDXIcon"
+            },
+            {
+                "name": "shadcn/ui",
+                "icon": "Shadcn"
+            }
+        ],
+        "github": "https://github.com/ramxcodes/the-quest",
+        "live": "https://quest.ramx.in/",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/the-quest",
+        "isWorking": true
+    },
+    {
+        "title": "FestX",
+        "description": "Comprehensive event management platform for college festivals and hackathons built for NMIMS'24 Hackathon",
+        "image": "/project/festx.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/fest-x.mp4",
+        "link": "https://fest-x.ramx.in/",
+        "technologies": [
+            {
+                "name": "Next.js",
+                "icon": "NextJs"
+            },
+            {
+                "name": "TypeScript",
+                "icon": "TypeScript"
+            },
+            {
+                "name": "MongoDB",
+                "icon": "MongoDB"
+            },
+            {
+                "name": "Vercel",
+                "icon": "Vercel"
+            },
+            {
+                "name": "Tailwind CSS",
+                "icon": "TailwindCss"
+            },
+            {
+                "name": "shadcn/ui",
+                "icon": "Shadcn"
+            }
+        ],
+        "github": "https://github.com/ramxcodes/fest-x",
+        "live": "https://fest-x.ramx.in/",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/fest-x",
+        "isWorking": true
+    },
+    {
+        "title": "I'm a chill guy",
+        "description": "AI-powered GitHub profile roaster with intelligent analysis, witty commentary, and social sharing features",
+        "image": "/project/chillguy.png",
+        "link": "https://chillguy.ramx.in",
+        "technologies": [
+            {
+                "name": "React",
+                "icon": "ReactIcon"
+            },
+            {
+                "name": "Express.js",
+                "icon": "ExpressJs"
+            },
+            {
+                "name": "Vercel",
+                "icon": "Vercel"
+            },
+            {
+                "name": "Tailwind CSS",
+                "icon": "TailwindCss"
+            },
+            {
+                "name": "Netlify",
+                "icon": "Netlify"
+            },
+            {
+                "name": "GitHub",
+                "icon": "Github"
+            }
+        ],
+        "github": "https://github.com/ramxcodes/chill-guy",
+        "live": "https://chillguy.ramx.in",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/chill-guy",
+        "isWorking": true
+    },
+    {
+        "title": "Ram's Space",
+        "description": "Personal poetry and blog platform featuring emotional stories, poems, and creative writing with dark/light theme support",
+        "image": "/project/ramspace.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/ramspace.mp4",
+        "link": "https://blog.ramx.in/",
+        "technologies": [
+            {
+                "name": "Next.js",
+                "icon": "NextJs"
+            },
+            {
+                "name": "TypeScript",
+                "icon": "TypeScript"
+            },
+            {
+                "name": "React",
+                "icon": "ReactIcon"
+            },
+            {
+                "name": "Tailwind CSS",
+                "icon": "TailwindCss"
+            },
+            {
+                "name": "MDX",
+                "icon": "MDXIcon"
+            }
+        ],
+        "live": "https://blog.ramx.in/",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/poems-blog",
+        "isWorking": true
+    },
+    {
+        "title": "Intent JS",
+        "description": "Modern JavaScript library website with advanced animations, interactive playground, and comprehensive documentation",
+        "image": "/project/intent.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/intent.mp4",
+        "link": "https://intent-js.ramx.in",
+        "technologies": [
+            {
+                "name": "Next.js",
+                "icon": "NextJs"
+            },
+            {
+                "name": "TypeScript",
+                "icon": "TypeScript"
+            },
+            {
+                "name": "React",
+                "icon": "ReactIcon"
+            },
+            {
+                "name": "Motion",
+                "icon": "Motion"
+            },
+            {
+                "name": "Tailwind CSS",
+                "icon": "TailwindCss"
+            },
+            {
+                "name": "shadcn/ui",
+                "icon": "Shadcn"
+            }
+        ],
+        "github": "https://github.com/ramxcodes/intent-js",
+        "live": "https://intent-js.ramx.in",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/intent-js",
+        "isWorking": true
+    },
+    {
+        "title": "Moonstone 2K25",
+        "description": "Official website for Medicaps University's premier annual college festival with event management and registration",
+        "image": "/project/moonstone.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/moonstone.mp4",
+        "link": "https://moonstone.ramx.in/",
+        "technologies": [
+            {
+                "name": "Next.js",
+                "icon": "NextJs"
+            },
+            {
+                "name": "TypeScript",
+                "icon": "TypeScript"
+            },
+            {
+                "name": "React",
+                "icon": "ReactIcon"
+            },
+            {
+                "name": "Tailwind CSS",
+                "icon": "TailwindCss"
+            },
+            {
+                "name": "Motion",
+                "icon": "Motion"
+            },
+            {
+                "name": "Three.js",
+                "icon": "ThreeJs"
+            },
+            {
+                "name": "shadcn/ui",
+                "icon": "Shadcn"
+            }
+        ],
+        "github": "https://github.com/ramxcodes/moonstone-fest",
+        "live": "https://moonstone.ramx.in/",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/moonstone-fest",
+        "isWorking": true
+    },
+    {
+        "title": "Valorant Remastered",
+        "description": "Gaming website with immersive 3D animations, agent showcases, and performance-optimized Valorant experience",
+        "image": "/project/valorant.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/valorant.mp4",
+        "link": "https://valorant.ramx.in",
+        "technologies": [
+            {
+                "name": "TypeScript",
+                "icon": "TypeScript"
+            },
+            {
+                "name": "React",
+                "icon": "ReactIcon"
+            }
+        ],
+        "github": "https://github.com/ramxcodes/valorant-remastered",
+        "live": "https://valorant.ramx.in",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/valorant-remastered",
+        "isWorking": true
+    },
+    {
+        "title": "That Startup",
+        "description": "Startup listing and pitching platform where entrepreneurs can submit ideas, vote on concepts, and connect with founders",
+        "image": "/project/that-startup.png",
+        "video": "https://ik.imagekit.io/hokb3mrdr/that-startup.mp4",
+        "link": "https://that-startup.ramx.in/",
+        "technologies": [
+            {
+                "name": "Next.js",
+                "icon": "NextJs"
+            },
+            {
+                "name": "TypeScript",
+                "icon": "TypeScript"
+            },
+            {
+                "name": "Tailwind CSS",
+                "icon": "TailwindCss"
+            },
+            {
+                "name": "Sanity",
+                "icon": "Sanity"
+            },
+            {
+                "name": "Vercel",
+                "icon": "Vercel"
+            }
+        ],
+        "github": "https://github.com/ramxcodes/that-startup",
+        "live": "https://that-startup.ramx.in/",
+        "details": true,
+        "projectDetailsPageSlug": "/projects/that-startup",
+        "isWorking": true
+    }
+]

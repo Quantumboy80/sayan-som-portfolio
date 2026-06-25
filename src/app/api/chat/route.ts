@@ -106,10 +106,81 @@ function checkRateLimit(clientIP: string): {
   };
 }
 
+function handleLocalResponse(userMessage: string, rateLimit: { remaining: number }) {
+  let replyText = '';
+  const msg = userMessage.toLowerCase();
+
+  if (msg.includes('contact') || msg.includes('email') || msg.includes('social') || msg.includes('linkedin') || msg.includes('twitter') || msg.includes('github') || msg.includes('hire') || msg.includes('reach') || msg.includes('call') || msg.includes('message')) {
+    replyText = `You can contact me through any of the following channels:\n\n` +
+      `- **Email**: [sayansom625@gmail.com](mailto:sayansom625@gmail.com)\n` +
+      `- **LinkedIn**: [Sayan Som](https://www.linkedin.com/in/sayan-som-26853928b/)\n` +
+      `- **GitHub**: [Quantumboy80](https://github.com/Quantumboy80)\n` +
+      `- **X / Twitter**: [@sayansom](https://x.com/sayansom)\n\n` +
+      `I look forward to hearing from you!`;
+  } else if (msg.includes('technolog') || msg.includes('skill') || msg.includes('stack') || msg.includes('language') || msg.includes('framework')) {
+    replyText = `I work with a variety of modern web technologies. My primary stack includes:\n\n` +
+      `- **TypeScript** & JavaScript\n` +
+      `- **React** (for building interactive user interfaces)\n` +
+      `- **Next.js** (for server-side rendering and full-stack web applications)\n` +
+      `- **Bun** (as a fast JavaScript runtime and package manager)\n` +
+      `- **PostgreSQL** & MongoDB (for databases)\n` +
+      `- **Node.js** & Prisma ORM\n\n` +
+      `Feel free to check out the **Skills** section on the homepage for more details!`;
+  } else if (msg.includes('project') || msg.includes('portfolio') || msg.includes('website') || msg.includes('app') || msg.includes('repo') || msg.includes('built')) {
+    replyText = `Here are some of my recent projects:\n\n` +
+      `1. **NotesBuddy**: A comprehensive study platform with notes, flashcards, quizzes, AI chatbot, and interactive learning tools ([Live Demo](https://notesbuddy.in))\n` +
+      `2. **Appwrite MCP Server**: Model Context Protocol server for seamless Appwrite database operations with 7 powerful tools\n` +
+      `3. **GitInsight**: A tool providing interactive insights and analytics for GitHub repositories\n\n` +
+      `You can view the full list with live demos in the [Projects](/projects) section of my portfolio!`;
+  } else if (msg.includes('experience') || msg.includes('job') || msg.includes('career') || msg.includes('work') || msg.includes('resume') || msg.includes('cv')) {
+    replyText = `Here is a summary of my professional journey:\n\n` +
+      `- **Founding Frontend Engineer** at **good day :3** (August 2025 - Present), architecting and developing complete frontend infrastructures.\n\n` +
+      `For a more detailed view, check out my [Work Experience](/work-experience) page or download my [Resume](/resume)!`;
+  } else {
+    replyText = `Hello! I'm Sayan's Portfolio Assistant. To enable full conversational AI, please configure a valid \`GEMINI_API_KEY\` environment variable in your \`.env\` file.\n\n` +
+      `In the meantime, you can ask me about:\n` +
+      `- My **Skills** and technologies\n` +
+      `- My recent **Projects**\n` +
+      `- How to **Contact** me for work\n` +
+      `- My professional **Experience**`;
+  }
+
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      const words = replyText.split(' ');
+      for (let i = 0; i < words.length; i++) {
+        const chunkText = words[i] + (i === words.length - 1 ? '' : ' ');
+        const sseData = `data: ${JSON.stringify({ text: chunkText })}\n\n`;
+        controller.enqueue(encoder.encode(sseData));
+        await new Promise((resolve) => setTimeout(resolve, 15));
+      }
+      controller.enqueue(encoder.encode('data: {"done": true}\n\n'));
+      controller.close();
+    },
+  });
+
+  return new NextResponse(stream, {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
+      'Access-Control-Allow-Origin': '*',
+      'X-RateLimit-Limit': RATE_LIMIT_MAX_REQUESTS.toString(),
+      'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+    },
+  });
+}
+
 export async function POST(request: NextRequest) {
+  let clientIP = 'unknown';
+  let rateLimit = { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS };
+  let validatedData;
+
   try {
-    const clientIP = getClientIP(request);
-    const rateLimit = checkRateLimit(clientIP);
+    clientIP = getClientIP(request);
+    rateLimit = checkRateLimit(clientIP);
 
     if (!rateLimit.allowed) {
       return NextResponse.json(
@@ -128,18 +199,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      console.error('GEMINI_API_KEY not configured');
+    const body = await request.json();
+    validatedData = chatSchema.parse(body);
+  } catch (error) {
+    console.error('Chat API Pre-flight Error:', error);
+    if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'AI service not configured' },
-        { status: 500 },
+        {
+          error: 'Invalid request data',
+          details: error.errors,
+        },
+        { status: 400 },
       );
     }
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
+  }
 
-    const body = await request.json();
-    const validatedData = chatSchema.parse(body);
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    console.warn('GEMINI_API_KEY not configured. Falling back to local responder.');
+    return handleLocalResponse(validatedData.message, rateLimit);
+  }
 
+  try {
     // Prepare the request body for Gemini REST API
     const requestBody = {
       contents: [
@@ -186,7 +271,8 @@ export async function POST(request: NextRequest) {
     });
 
     if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.status}`);
+      console.warn(`Gemini API returned error status ${response.status}. Falling back to local responder.`);
+      return handleLocalResponse(validatedData.message, rateLimit);
     }
 
     const encoder = new TextEncoder();
@@ -247,23 +333,9 @@ export async function POST(request: NextRequest) {
         'X-RateLimit-Remaining': rateLimit.remaining.toString(),
       },
     });
-  } catch (error) {
-    console.error('Chat API Error:', error);
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Invalid request data',
-          details: error.errors,
-        },
-        { status: 400 },
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
-    );
+  } catch (geminiError) {
+    console.warn('Gemini API call failed. Falling back to local responder:', geminiError);
+    return handleLocalResponse(validatedData.message, rateLimit);
   }
 }
 

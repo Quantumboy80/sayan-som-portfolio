@@ -1,19 +1,22 @@
-import { about, mySkills } from '@/config/About';
+import { getAboutData } from '@/lib/content';
+import { getIcon } from '@/lib/mapper';
 import Image from 'next/image';
 import React from 'react';
 
 import Container from '../common/Container';
 import SectionHeading from '../common/SectionHeading';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
-export default function About() {
+export default async function About() {
+  const { about, skills } = await getAboutData();
+
   return (
     <Container className="mt-20">
       <SectionHeading subHeading="About" heading="Me" />
       {/* About me */}
       <div className="mt-8 flex flex-col gap-4 md:flex-row">
         <Image
-          src="/assets/logo.png"
+          src="/assets/luffy_avatar.jpg"
           alt="About"
           width={100}
           height={100}
@@ -24,16 +27,18 @@ export default function About() {
           <p className="text-secondary mt-4">{about.description}</p>
           <p className="text-secondary mt-8 font-bold">Skills</p>
           <div className="flex flex-wrap gap-2">
-            {mySkills.map((skill) => (
-              <Tooltip key={skill.key}>
-                <TooltipTrigger asChild>
-                  <div className="mt-4 size-6 hover:cursor-pointer">
-                    {skill}
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>{skill.key}</TooltipContent>
-              </Tooltip>
-            ))}
+            <TooltipProvider>
+              {skills.map((skill: string) => (
+                <Tooltip key={skill}>
+                  <TooltipTrigger asChild>
+                    <div className="mt-4 size-6 hover:cursor-pointer">
+                      {getIcon(skill)}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>{skill}</TooltipContent>
+                </Tooltip>
+              ))}
+            </TooltipProvider>
           </div>
         </div>
       </div>

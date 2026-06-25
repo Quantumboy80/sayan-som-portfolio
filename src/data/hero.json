@@ -1,0 +1,71 @@
+{
+  "name": "Sayan",
+  "title": "An aspiring software developer.",
+  "avatar": "/assets/luffy_avatar.jpg",
+  "skills": [
+    {
+      "name": "Typescript",
+      "href": "https://www.typescriptlang.org/",
+      "component": "TypeScript"
+    },
+    {
+      "name": "React",
+      "href": "https://react.dev/",
+      "component": "ReactIcon"
+    },
+    {
+      "name": "Next.js",
+      "href": "https://nextjs.org/",
+      "component": "NextJs"
+    },
+    {
+      "name": "Bun",
+      "href": "https://bun.sh/",
+      "component": "Bun"
+    },
+    {
+      "name": "PostgreSQL",
+      "href": "https://www.postgresql.org/",
+      "component": "PostgreSQL"
+    }
+  ],
+  "description": {
+    "template": "I build interactive web apps using {skills:0}, {skills:1}, {skills:2}, {skills:3} and {skills:4}. With a focus on <b>UI</b> design. Enthusiastic about <b>software dev</b> & <b>AI/ML</b>, driven by a keen eye for design."
+  },
+  "buttons": [
+    {
+      "variant": "outline",
+      "text": "Resume / CV",
+      "href": "/resume",
+      "icon": "CV"
+    },
+    {
+      "variant": "default",
+      "text": "Get in touch",
+      "href": "/contact",
+      "icon": "Chat"
+    }
+  ],
+  "socialLinks": [
+    {
+      "name": "X",
+      "href": "https://x.com/sayansom",
+      "icon": "X"
+    },
+    {
+      "name": "LinkedIn",
+      "href": "https://www.linkedin.com/in/sayan-som-26853928b/",
+      "icon": "LinkedIn"
+    },
+    {
+      "name": "Github",
+      "href": "https://github.com/Quantumboy80",
+      "icon": "Github"
+    },
+    {
+      "name": "Email",
+      "href": "mailto:sayansom625@gmail.com",
+      "icon": "Mail"
+    }
+  ]
+}

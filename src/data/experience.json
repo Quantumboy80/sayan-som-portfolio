@@ -1,0 +1,44 @@
+[
+    {
+        "isCurrent": false,
+        "company": "IEM Research Foundation",
+        "position": "Internship",
+        "location": "Hybrid · Kolkata, West Bengal, India",
+        "image": "/company/iem.png",
+        "description": [
+            "Built workflow modules for LMS & ERP platform, enabling academic automation and cross-system data integration across core pipelines.",
+            "Developed and tested 5+ application modules/features, improving system reliability, integration consistency, and overall user experience through iterative development cycles."
+        ],
+        "startDate": "Dec 2025",
+        "endDate": "Feb 2026",
+        "website": "https://iemcal.com",
+        "linkedin": "https://www.linkedin.com/school/iemcal/",
+        "technologies": [
+            {
+                "name": "JavaScript",
+                "href": "https://javascript.com/",
+                "icon": "JavaScript"
+            },
+            {
+                "name": "CSS",
+                "href": "https://developer.mozilla.org/en-US/docs/Web/CSS",
+                "icon": "CSS"
+            },
+            {
+                "name": "MongoDB",
+                "href": "https://mongodb.com/",
+                "icon": "MongoDB"
+            },
+            {
+                "name": "Node.js",
+                "href": "https://nodejs.org/",
+                "icon": "NodeJs"
+            },
+            {
+                "name": "HTML",
+                "href": "https://html.com/",
+                "icon": "Html"
+            }
+        ]
+    }
+]

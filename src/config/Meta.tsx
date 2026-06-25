@@ -13,15 +13,15 @@ export interface PageMeta {
 export const siteConfig = {
   name: heroConfig.name,
   title: 'Sleek Portfolio',
-  description: 'Sleek Portfolio Template by @Ramxcodes',
+  description: 'Sleek Portfolio Template by @Sayan',
   url: process.env.NEXT_PUBLIC_URL || 'http://localhost:3000',
   ogImage: '/meta/opengraph-image.png',
   author: {
     name: about.name,
-    twitter: '@ramxcodes',
-    github: 'ramxcodes',
-    linkedin: 'ramxcodes',
-    email: 'ramxcodes@gmail.com',
+    twitter: '@sayansom',
+    github: 'Quantumboy80',
+    linkedin: 'sayan-som-26853928b',
+    email: 'sayansom625@gmail.com',
   },
   keywords: [
     'portfolio',
@@ -57,7 +57,7 @@ export const pageMetadata: Record<string, PageMeta> = {
     description:
       "Get in touch with me for collaborations, projects, or opportunities. I'd love to hear from you!",
     keywords: ['contact', 'hire', 'collaboration', 'freelance', 'developer'],
-    ogImage: '/assets/logo.png',
+    ogImage: '/assets/luffy_avatar.jpg',
     twitterCard: 'summary',
   },
 
@@ -93,19 +93,19 @@ export const pageMetadata: Record<string, PageMeta> = {
     twitterCard: 'summary_large_image',
   },
 
-  // Blog page
-  '/blog': {
-    title: 'Blog - Thoughts & Tutorials',
+  // Certificates page
+  '/certificates': {
+    title: 'Certificates & Achievements',
     description:
-      'Read my thoughts, tutorials, and insights on engineering, programming, and web development.',
+      'Explore my curated list of certificates, academic credentials, and professional achievements.',
     keywords: [
-      'blog',
-      'tutorials',
-      'programming',
-      'web development',
-      'technical writing',
+      'certificates',
+      'achievements',
+      'credentials',
+      'skills',
+      'certifications',
     ],
-    ogImage: '/meta/blogs.png',
+    ogImage: '/meta/certificates.png',
     twitterCard: 'summary_large_image',
   },
 

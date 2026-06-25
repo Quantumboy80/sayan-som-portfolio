@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/components/common/ThemeProviders';
 import { generateMetadata as getMetadata } from '@/config/Meta';
 import ReactLenis from 'lenis/react';
 import { ViewTransitions } from 'next-view-transitions';
+import TransitionErrorCatcher from '@/components/common/TransitionErrorCatcher';
 
 import './globals.css';
 
@@ -21,6 +22,42 @@ export default function RootLayout({
   return (
     <ViewTransitions>
       <html lang="en" suppressHydrationWarning>
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  const handleRejection = (event) => {
+                    const reason = event.reason;
+                    if (
+                      reason &&
+                      (reason.name === 'AbortError' ||
+                        reason.message?.includes('Transition was aborted') ||
+                        String(reason).includes('Transition was aborted'))
+                    ) {
+                      event.preventDefault();
+                      event.stopImmediatePropagation();
+                    }
+                  };
+                  const handleError = (event) => {
+                    const error = event.error;
+                    if (
+                      error &&
+                      (error.name === 'AbortError' ||
+                        error.message?.includes('Transition was aborted') ||
+                        String(error).includes('Transition was aborted'))
+                    ) {
+                      event.preventDefault();
+                      event.stopImmediatePropagation();
+                    }
+                  };
+                  window.addEventListener('unhandledrejection', handleRejection, true);
+                  window.addEventListener('error', handleError, true);
+                })();
+              `,
+            }}
+          />
+        </head>
         <body className={`font-hanken-grotesk antialiased`}>
           <ThemeProvider
             attribute="class"
@@ -29,6 +66,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ReactLenis root>
+              <TransitionErrorCatcher />
               <Navbar />
               {children}
               <OnekoCat />

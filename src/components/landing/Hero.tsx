@@ -1,29 +1,42 @@
-import { heroConfig, skillComponents, socialLinks } from '@/config/Hero';
+import { skillComponents } from '@/config/Hero';
+import { getHeroData } from '@/lib/content';
 import { parseTemplate } from '@/lib/hero';
 import { cn } from '@/lib/utils';
-import { Link } from 'next-view-transitions';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 import Container from '../common/Container';
 import Skill from '../common/Skill';
 import CV from '../svgs/CV';
 import Chat from '../svgs/Chat';
+import Github from '../svgs/Github';
+import LinkedIn from '../svgs/LinkedIn';
+import Mail from '../svgs/Mail';
+import X from '../svgs/X';
 import { Button } from '../ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 const buttonIcons = {
   CV: CV,
   Chat: Chat,
 };
 
-export default function Hero() {
-  const { name, title, avatar, skills, description, buttons } = heroConfig;
+const socialIcons = {
+  Github: Github,
+  LinkedIn: LinkedIn,
+  Mail: Mail,
+  X: X,
+};
+
+export default async function Hero() {
+  const heroConfig = await getHeroData();
+  const { name, title, avatar, skills, description, buttons, socialLinks } = heroConfig;
 
   const renderDescription = () => {
     const parts = parseTemplate(description.template, skills);
 
-    return parts.map((part) => {
+    return parts.map((part: any) => {
       if (part.type === 'skill' && 'skill' in part && part.skill) {
         const SkillComponent =
           skillComponents[part.skill.component as keyof typeof skillComponents];
@@ -73,7 +86,7 @@ export default function Hero() {
 
       {/* Buttons */}
       <div className="mt-8 flex gap-4">
-        {buttons.map((button, index) => {
+        {buttons.map((button: any, index: number) => {
           const IconComponent =
             buttonIcons[button.icon as keyof typeof buttonIcons];
           return (
@@ -94,22 +107,27 @@ export default function Hero() {
 
       {/* Social Links */}
       <div className="mt-8 flex gap-2">
-        {socialLinks.map((link) => (
-          <Tooltip key={link.name} delayDuration={0}>
-            <TooltipTrigger asChild>
-              <Link
-                href={link.href}
-                key={link.name}
-                className="text-secondary flex items-center gap-2"
-              >
-                <span className="size-6">{link.icon}</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{link.name}</p>
-            </TooltipContent>
-          </Tooltip>
-        ))}
+        <TooltipProvider>
+          {socialLinks.map((link: any) => {
+            const IconComponent = socialIcons[link.icon as keyof typeof socialIcons];
+            return (
+              <Tooltip key={link.name} delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={link.href}
+                    key={link.name}
+                    className="text-secondary flex items-center gap-2"
+                  >
+                    <span className="size-6">{IconComponent && <IconComponent />}</span>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{link.name}</p>
+                </TooltipContent>
+              </Tooltip>
+            );
+          })}
+        </TooltipProvider>
       </div>
     </Container>
   );

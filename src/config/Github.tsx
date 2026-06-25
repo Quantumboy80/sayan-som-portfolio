@@ -6,12 +6,13 @@
  */
 
 export const githubConfig = {
-  username: 'ramxcodes',
+  username: 'Quantumboy80',
+  displayName: 'Sayan',
   apiUrl: 'https://github-contributions-api.deno.dev',
 
   // Display settings
   title: 'GitHub Activity',
-  subtitle: 'coding journey over the past year',
+  subtitle: 'coding journey',
 
   // Chart settings
   blockSize: 11,

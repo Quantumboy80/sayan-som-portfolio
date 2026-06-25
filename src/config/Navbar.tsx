@@ -5,7 +5,7 @@ export interface NavItem {
 
 export const navbarConfig = {
   logo: {
-    src: '/assets/logo.png',
+    src: '/assets/luffy_avatar.jpg',
     alt: 'logo',
     width: 100,
     height: 100,
@@ -16,8 +16,8 @@ export const navbarConfig = {
       href: '/work-experience',
     },
     {
-      label: 'Blogs',
-      href: '/blog',
+      label: 'Certificates',
+      href: '/certificates',
     },
     {
       label: 'Projects',

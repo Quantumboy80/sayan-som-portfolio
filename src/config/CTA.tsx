@@ -7,11 +7,12 @@
 
 export const ctaConfig = {
   // Profile image settings
-  profileImage: '/assets/logo.png',
+  profileImage: '/assets/luffy_avatar.jpg',
   profileAlt: 'Profile',
 
   // CTA button settings
   linkText: 'Book a Free Call',
+  phone: '6290181224',
   calLink: 'ramxcodes/meeting',
 
   // Pre-text message

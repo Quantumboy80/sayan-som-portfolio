@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "hero": true,
+    "experience": true,
+    "projects": true,
+    "about": true,
+    "github": true,
+    "certificates": true,
+    "cta": true,
+    "setup": true,
+    "journey": true
+  }
+}

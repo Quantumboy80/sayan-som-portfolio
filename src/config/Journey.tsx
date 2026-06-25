@@ -20,7 +20,7 @@ export const journeyItems: JourneyItem[] = [
     name: 'Certificates & Achievements',
     description: 'A curated list of certificates and achievements.',
     icon: CertificateIcon,
-    href: '/journey/certificates',
+    href: '/certificates',
   },
 ];
 

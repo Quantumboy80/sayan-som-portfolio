@@ -1,4 +1,5 @@
 import { navbarConfig } from '@/config/Navbar';
+import { getSettings } from '@/lib/content';
 import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import React from 'react';
@@ -6,7 +7,17 @@ import React from 'react';
 import Container from './Container';
 import { ThemeToggleButton } from './ThemeSwitch';
 
-export default function Navbar() {
+export default async function Navbar() {
+  const settings = await getSettings();
+  const { sections } = settings;
+
+  const filteredNavItems = navbarConfig.navItems.filter((item) => {
+    if (item.label === 'Work' && !sections.experience) return false;
+    if (item.label === 'Certificates' && !sections.certificates) return false;
+    if (item.label === 'Projects' && !sections.projects) return false;
+    return true;
+  });
+
   return (
     <Container className="sticky top-0 z-20 rounded-md py-4 backdrop-blur-sm">
       <div className="flex items-center justify-between px-6">
@@ -18,10 +29,11 @@ export default function Navbar() {
               alt={navbarConfig.logo.alt}
               width={navbarConfig.logo.width}
               height={navbarConfig.logo.height}
+              priority
             />
           </Link>
           <div className="flex items-center justify-center gap-4">
-            {navbarConfig.navItems.map((item) => (
+            {filteredNavItems.map((item) => (
               <Link
                 className="transition-all duration-300 ease-in-out hover:underline hover:decoration-2 hover:underline-offset-4"
                 key={item.label}
