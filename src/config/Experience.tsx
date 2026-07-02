@@ -60,7 +60,7 @@ export const experiences: Experience[] = [
       'Integrated Supabase Realtime for KDS live status tracking and implemented peer-to-peer WebRTC audio streams for direct guest-to-kitchen voice calling.',
       'Secured order pipelines against double-spend races using Prisma transactions, client-generated idempotency validations, and Upstash Redis rate limiting.',
     ],
-    startDate: 'Feb 2026',
+    startDate: 'June 2026',
     endDate: 'Present',
     website: 'https://nenzon.com',
     technologies: [
@@ -118,6 +118,11 @@ export const experiences: Experience[] = [
         name: 'WebRTC',
         href: 'https://webrtc.org/',
         icon: <WebRTC />,
+      },
+      {
+        name: 'Bun',
+        href: 'https://bun.sh/',
+        icon: <Bun />,
       },
     ],
   },
