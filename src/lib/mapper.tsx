@@ -27,6 +27,10 @@ import ThreeJs from '@/components/technologies/ThreeJs';
 import TypeScript from '@/components/technologies/TypeScript';
 import Vercel from '@/components/technologies/Vercel';
 import Notion from '@/components/technologies/Notion';
+import Supabase from '@/components/technologies/Supabase';
+import Redis from '@/components/technologies/Redis';
+import WebRTC from '@/components/technologies/WebRTC';
+import GSAP from '@/components/technologies/GSAP';
 import React from 'react';
 
 export const iconMap: Record<string, React.FC<any>> = {
@@ -59,6 +63,12 @@ export const iconMap: Record<string, React.FC<any>> = {
     TypeScript,
     Vercel,
     Notion,
+    Supabase,
+    Redis,
+    "Upstash Redis": Redis,
+    WebRTC,
+    GSAP,
+    "Framer Motion": Motion,
 };
 
 export function getIcon(name: string) {

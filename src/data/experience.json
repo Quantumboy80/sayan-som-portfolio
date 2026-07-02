@@ -1,44 +1,117 @@
 [
-    {
-        "isCurrent": false,
-        "company": "IEM Research Foundation",
-        "position": "Internship",
-        "location": "Hybrid · Kolkata, West Bengal, India",
-        "image": "/company/iem.png",
-        "description": [
-            "Built workflow modules for LMS & ERP platform, enabling academic automation and cross-system data integration across core pipelines.",
-            "Developed and tested 5+ application modules/features, improving system reliability, integration consistency, and overall user experience through iterative development cycles."
-        ],
-        "startDate": "Dec 2025",
-        "endDate": "Feb 2026",
-        "website": "https://iemcal.com",
-        "linkedin": "https://www.linkedin.com/school/iemcal/",
-        "technologies": [
-            {
-                "name": "JavaScript",
-                "href": "https://javascript.com/",
-                "icon": "JavaScript"
-            },
-            {
-                "name": "CSS",
-                "href": "https://developer.mozilla.org/en-US/docs/Web/CSS",
-                "icon": "CSS"
-            },
-            {
-                "name": "MongoDB",
-                "href": "https://mongodb.com/",
-                "icon": "MongoDB"
-            },
-            {
-                "name": "Node.js",
-                "href": "https://nodejs.org/",
-                "icon": "NodeJs"
-            },
-            {
-                "name": "HTML",
-                "href": "https://html.com/",
-                "icon": "Html"
-            }
-        ]
-    }
+  {
+    "isCurrent": true,
+    "company": "Nenzon Technologies (start-up)",
+    "position": "Full Stack Engineer",
+    "location": "Kolkata, West Bengal, India (Remote)",
+    "image": "/company/nenzon.png",
+    "description": [
+      "Designed and built DhabaFlow, a multi-tenant QR-code table-side dining storefront utilizing Next.js, TypeScript, and Tailwind CSS mapped to Supabase for zero-latency, serverless execution.",
+      "Integrated Supabase Realtime for KDS live status tracking and implemented peer-to-peer WebRTC audio streams for direct guest-to-kitchen voice calling.",
+      "Secured order pipelines against double-spend races using Prisma transactions, client-generated idempotency validations, and Upstash Redis rate limiting."
+    ],
+    "startDate": "Feb 2026",
+    "endDate": "Present",
+    "website": "https://nenzon.com",
+    "linkedin": "",
+    "technologies": [
+      {
+        "name": "React",
+        "href": "https://react.dev/",
+        "icon": "ReactIcon"
+      },
+      {
+        "name": "Next.js",
+        "href": "https://nextjs.org/",
+        "icon": "NextJs"
+      },
+      {
+        "name": "TypeScript",
+        "href": "https://typescriptlang.org/",
+        "icon": "TypeScript"
+      },
+      {
+        "name": "Tailwind CSS",
+        "href": "https://tailwindcss.com/",
+        "icon": "TailwindCss"
+      },
+      {
+        "name": "Framer Motion",
+        "href": "https://www.framer.com/motion/",
+        "icon": "Framer Motion"
+      },
+      {
+        "name": "GSAP",
+        "href": "https://gsap.com/",
+        "icon": "GSAP"
+      },
+      {
+        "name": "PostgreSQL",
+        "href": "https://www.postgresql.org/",
+        "icon": "PostgreSQL"
+      },
+      {
+        "name": "Supabase",
+        "href": "https://supabase.com/",
+        "icon": "Supabase"
+      },
+      {
+        "name": "Prisma",
+        "href": "https://www.prisma.io/",
+        "icon": "Prisma"
+      },
+      {
+        "name": "Upstash Redis",
+        "href": "https://upstash.com/",
+        "icon": "Upstash Redis"
+      },
+      {
+        "name": "WebRTC",
+        "href": "https://webrtc.org/",
+        "icon": "WebRTC"
+      }
+    ]
+  },
+  {
+    "isCurrent": false,
+    "company": "IEM Research Foundation",
+    "position": "Internship",
+    "location": "Hybrid · Kolkata, West Bengal, India",
+    "image": "/company/iem.png",
+    "description": [
+      "Built workflow modules for LMS & ERP platform, enabling academic automation and cross-system data integration across core pipelines.",
+      "Developed and tested 5+ application modules/features, improving system reliability, integration consistency, and overall user experience through iterative development cycles."
+    ],
+    "startDate": "Dec 2025",
+    "endDate": "Feb 2026",
+    "website": "https://iemcal.com",
+    "linkedin": "https://www.linkedin.com/school/iemcal/",
+    "technologies": [
+      {
+        "name": "JavaScript",
+        "href": "https://javascript.com/",
+        "icon": "JavaScript"
+      },
+      {
+        "name": "CSS",
+        "href": "https://developer.mozilla.org/en-US/docs/Web/CSS",
+        "icon": "CSS"
+      },
+      {
+        "name": "MongoDB",
+        "href": "https://mongodb.com/",
+        "icon": "MongoDB"
+      },
+      {
+        "name": "Node.js",
+        "href": "https://nodejs.org/",
+        "icon": "NodeJs"
+      },
+      {
+        "name": "HTML",
+        "href": "https://html.com/",
+        "icon": "Html"
+      }
+    ]
+  }
 ]
