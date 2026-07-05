@@ -8,7 +8,6 @@ import Hero from '@/components/landing/Hero';
 import Journey from '@/components/landing/Journey';
 import Work from '@/components/landing/Projects';
 import Setup from '@/components/landing/Setup';
-import TechsAnimation from '@/components/landing/TechsAnimation';
 import { getSettings } from '@/lib/content';
 import React from 'react';
 
@@ -23,7 +22,6 @@ export default async function page() {
       {sections.hero && <Hero />}
       {sections.experience && <Experience />}
       {sections.projects && <Work />}
-      {sections.techsAnimation && <TechsAnimation />}
       {sections.about && <About />}
       {sections.github && <Github />}
       {sections.certificates && <Certificates />}

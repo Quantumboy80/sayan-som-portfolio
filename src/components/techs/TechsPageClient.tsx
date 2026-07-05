@@ -19,7 +19,6 @@ const CharacterV1 = ({
   scrollYProgress,
 }: CharacterProps) => {
   const isSpace = char === " ";
-
   const distanceFromCenter = index - centerIndex;
 
   const x = useTransform(
@@ -71,8 +70,8 @@ const CharacterV2 = ({
   return (
     <motion.img
       src={char}
-      alt="tech icon"
-      className={cn("inline-block w-12 h-12 md:w-16 md:h-16 object-contain mx-2 bg-transparent", isSpace && "w-4")}
+      alt="3d tech icon"
+      className={cn("inline-block h-[1.2em] w-[1.2em] object-contain mx-2 align-middle bg-transparent", isSpace && "w-4")}
       style={{
         x,
         scale,
@@ -113,8 +112,8 @@ const CharacterV3 = ({
   return (
     <motion.img
       src={char}
-      alt="tech icon"
-      className={cn("inline-block w-12 h-12 md:w-16 md:h-16 object-contain mx-2 bg-transparent", isSpace && "w-4")}
+      alt="3d tech icon"
+      className={cn("inline-block h-[1.2em] w-[1.2em] object-contain mx-2 align-middle bg-transparent", isSpace && "w-4")}
       style={{
         x,
         rotate,
@@ -126,7 +125,7 @@ const CharacterV3 = ({
   );
 };
 
-export default function TechsAnimation() {
+export default function TechsPageClient() {
   const targetRef = useRef<HTMLDivElement | null>(null);
   const targetRef2 = useRef<HTMLDivElement | null>(null);
   const targetRef3 = useRef<HTMLDivElement | null>(null);
@@ -145,35 +144,35 @@ export default function TechsAnimation() {
   const characters = text.split("");
   const centerIndex = Math.floor(characters.length / 2);
 
-  const skillIcons = [
-    "/skills/react.png",
-    "/skills/nextjs.png",
-    "/skills/typescript.png",
-    "/skills/node.png",
-    "/skills/postgresql.png",
-    "/skills/mongodb.png",
-    "/skills/prisma.png",
-    "/skills/javascript.png",
-    "/skills/bun.png",
+  const macIcon = [
+    "/mac/Discord.png",
+    "/mac/figma.png",
+    "/mac/Framer.png",
+    "/mac/Github.png",
+    "/mac/Monog.png",
+    "/mac/notion.png",
+    "/mac/Pieces.png",
+    "/mac/Postman.png",
+    "/mac/vsCode.png",
   ];
-  const iconCenterIndex = Math.floor(skillIcons.length / 2);
+  const iconCenterIndex = Math.floor(macIcon.length / 2);
 
   return (
-    <div className="w-full relative select-none">
-      {/* Scroll indicator */}
-      <div className="absolute top-22 left-1/2 z-10 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center text-black dark:text-white">
-        <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:from-zinc-300 dark:after:from-zinc-800 after:to-transparent after:content-['']">
+    <main className="w-full bg-[#f5f4f3] select-none">
+      {/* Scroll indicator overlay */}
+      <div className="top-22 fixed left-1/2 z-10 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center text-black pointer-events-none">
+        <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:from-zinc-400 after:to-transparent after:content-['']">
           Scroll to see more
         </span>
       </div>
 
-      {/* Section 1: Character Spreading */}
+      {/* Part 1: Text reveal */}
       <div
         ref={targetRef}
-        className="relative box-border flex h-[210vh] items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] dark:bg-[#0c0c0e] p-[2vw]"
+        className="relative box-border flex h-[210vh] items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] p-[2vw]"
       >
         <div
-          className="w-full max-w-4xl text-center text-5xl md:text-6xl font-bold uppercase tracking-tighter text-black dark:text-white"
+          className="font-sans w-full max-w-4xl text-center text-5xl md:text-6xl font-bold uppercase tracking-tighter text-black"
           style={{
             perspective: "500px",
           }}
@@ -190,20 +189,20 @@ export default function TechsAnimation() {
         </div>
       </div>
 
-      {/* Section 2: Tech Icons Spreading (V2) */}
+      {/* Part 2: Icons slide from bottom */}
       <div
         ref={targetRef2}
-        className="relative -mt-[100vh] box-border flex h-[210vh] flex-col items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] dark:bg-[#0c0c0e] p-[2vw]"
+        className="relative -mt-[100vh] box-border flex h-[210vh] flex-col items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] p-[2vw]"
       >
-        <p className="flex items-center justify-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-black dark:text-white">
-          <Bracket className="h-12 text-black dark:text-white" />
-          <span className="font-medium">
+        <p className="font-sans flex items-center justify-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-black">
+          <Bracket className="h-12 text-black" />
+          <span className="font-sans font-medium">
             tech i use
           </span>
-          <Bracket className="h-12 scale-x-[-1] text-black dark:text-white" />
+          <Bracket className="h-12 scale-x-[-1] text-black" />
         </p>
-        <div className="w-full max-w-4xl text-center text-6xl font-bold uppercase tracking-tighter text-black dark:text-white">
-          {skillIcons.map((char, index) => (
+        <div className="font-sans w-full max-w-4xl text-center text-5xl md:text-6xl font-bold uppercase tracking-tighter text-black">
+          {macIcon.map((char, index) => (
             <CharacterV2
               key={index}
               char={char}
@@ -215,25 +214,25 @@ export default function TechsAnimation() {
         </div>
       </div>
 
-      {/* Section 3: Tech Icons Rotation Spreading (V3) */}
+      {/* Part 3: Icons rotation zoom */}
       <div
         ref={targetRef3}
-        className="relative -mt-[95vh] box-border flex h-[210vh] flex-col items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] dark:bg-[#0c0c0e] p-[2vw]"
+        className="relative -mt-[95vh] box-border flex h-[210vh] flex-col items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] p-[2vw]"
       >
-        <p className="flex items-center justify-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-black dark:text-white">
-          <Bracket className="h-12 text-black dark:text-white" />
-          <span className="font-medium">
+        <p className="font-sans flex items-center justify-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-black">
+          <Bracket className="h-12 text-black" />
+          <span className="font-sans font-medium">
             tech i use
           </span>
-          <Bracket className="h-12 scale-x-[-1] text-black dark:text-white" />
+          <Bracket className="h-12 scale-x-[-1] text-black" />
         </p>
         <div
-          className="w-full max-w-4xl text-center text-6xl font-bold uppercase tracking-tighter text-black dark:text-white"
+          className="font-sans w-full max-w-4xl text-center text-5xl md:text-6xl font-bold uppercase tracking-tighter text-black"
           style={{
             perspective: "500px",
           }}
         >
-          {skillIcons.map((char, index) => (
+          {macIcon.map((char, index) => (
             <CharacterV3
               key={index}
               char={char}
@@ -244,7 +243,7 @@ export default function TechsAnimation() {
           ))}
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -263,3 +262,4 @@ const Bracket = ({ className }: { className: string }) => {
     </svg>
   );
 };
+export { CharacterV1, CharacterV2, CharacterV3 };

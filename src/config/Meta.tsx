@@ -158,6 +158,16 @@ export const pageMetadata: Record<string, PageMeta> = {
     ogImage: '/meta/setup.png',
     twitterCard: 'summary_large_image',
   },
+
+  // Techs page
+  '/techs': {
+    title: 'Technologies - My Tech Stack',
+    description:
+      'Discover the technologies, tools, frameworks, and programming languages I use to build premium software.',
+    keywords: ['technologies', 'tech stack', 'react', 'nextjs', 'development', 'tools'],
+    ogImage: '/meta/techs.png',
+    twitterCard: 'summary_large_image',
+  },
 };
 
 // Helper function to get metadata for a specific page
