@@ -158,10 +158,10 @@ export default function TechsPageClient() {
   const iconCenterIndex = Math.floor(macIcon.length / 2);
 
   return (
-    <main className="w-full bg-[#f5f4f3] select-none">
+    <main className="w-full bg-[#f5f4f3] dark:bg-background select-none transition-colors duration-300">
       {/* Scroll indicator overlay */}
-      <div className="top-22 fixed left-1/2 z-10 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center text-black pointer-events-none">
-        <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:from-zinc-400 after:to-transparent after:content-['']">
+      <div className="top-22 fixed left-1/2 z-10 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center text-black dark:text-white pointer-events-none">
+        <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:from-zinc-400 dark:after:from-zinc-700 after:to-transparent after:content-['']">
           Scroll to see more
         </span>
       </div>
@@ -169,10 +169,10 @@ export default function TechsPageClient() {
       {/* Part 1: Text reveal */}
       <div
         ref={targetRef}
-        className="relative box-border flex h-[210vh] items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] p-[2vw]"
+        className="relative box-border flex h-[210vh] items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] dark:bg-background p-[2vw] transition-colors duration-300"
       >
         <div
-          className="font-sans w-full max-w-4xl text-center text-5xl md:text-6xl font-bold uppercase tracking-tighter text-black"
+          className="font-sans w-full max-w-4xl text-center text-5xl md:text-6xl font-bold uppercase tracking-tighter text-black dark:text-white"
           style={{
             perspective: "500px",
           }}
@@ -192,16 +192,16 @@ export default function TechsPageClient() {
       {/* Part 2: Icons slide from bottom */}
       <div
         ref={targetRef2}
-        className="relative -mt-[100vh] box-border flex h-[210vh] flex-col items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] p-[2vw]"
+        className="relative -mt-[100vh] box-border flex h-[210vh] flex-col items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] dark:bg-background p-[2vw] transition-colors duration-300"
       >
-        <p className="font-sans flex items-center justify-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-black">
-          <Bracket className="h-12 text-black" />
+        <p className="font-sans flex items-center justify-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-black dark:text-white">
+          <Bracket className="h-12 text-black dark:text-white" />
           <span className="font-sans font-medium">
             tech i use
           </span>
-          <Bracket className="h-12 scale-x-[-1] text-black" />
+          <Bracket className="h-12 scale-x-[-1] text-black dark:text-white" />
         </p>
-        <div className="font-sans w-full max-w-4xl text-center text-5xl md:text-6xl font-bold uppercase tracking-tighter text-black">
+        <div className="font-sans w-full max-w-4xl text-center text-5xl md:text-6xl font-bold uppercase tracking-tighter text-black dark:text-white">
           {macIcon.map((char, index) => (
             <CharacterV2
               key={index}
@@ -217,17 +217,17 @@ export default function TechsPageClient() {
       {/* Part 3: Icons rotation zoom */}
       <div
         ref={targetRef3}
-        className="relative -mt-[95vh] box-border flex h-[210vh] flex-col items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] p-[2vw]"
+        className="relative -mt-[95vh] box-border flex h-[210vh] flex-col items-center justify-center gap-[2vw] overflow-hidden bg-[#f5f4f3] dark:bg-background p-[2vw] transition-colors duration-300"
       >
-        <p className="font-sans flex items-center justify-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-black">
-          <Bracket className="h-12 text-black" />
+        <p className="font-sans flex items-center justify-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-black dark:text-white">
+          <Bracket className="h-12 text-black dark:text-white" />
           <span className="font-sans font-medium">
             tech i use
           </span>
-          <Bracket className="h-12 scale-x-[-1] text-black" />
+          <Bracket className="h-12 scale-x-[-1] text-black dark:text-white" />
         </p>
         <div
-          className="font-sans w-full max-w-4xl text-center text-5xl md:text-6xl font-bold uppercase tracking-tighter text-black"
+          className="font-sans w-full max-w-4xl text-center text-5xl md:text-6xl font-bold uppercase tracking-tighter text-black dark:text-white"
           style={{
             perspective: "500px",
           }}
