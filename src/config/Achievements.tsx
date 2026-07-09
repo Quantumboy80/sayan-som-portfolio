@@ -105,7 +105,7 @@ export type CredentialItem = {
   link?: string;
 };
  
-export const leetcodeUsername = "sayansom"; // confirm this is your real handle
+export const leetcodeUsername = "sayanHQR004"; // confirm this is your real handle
  
 export const research: ResearchItem[] = [
   {
@@ -133,7 +133,7 @@ export const openSource: OpenSourceItem[] = [
     description: "GirlScript Summer of Code contributor.",
     mergedPRs: 0, // fill with real count
     repos: 0, // fill with real count
-    // link: "https://github.com/Quantumboy80?tab=overview",
+    link: "https://gssoc.girlscript.org/profile/fdd16455-ec38-4292-944f-4b2c66283b00",
   },
 ];
  

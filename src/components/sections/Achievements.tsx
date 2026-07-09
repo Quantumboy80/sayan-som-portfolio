@@ -183,24 +183,36 @@ export function Achievements() {
             <p className="mb-3 text-sm text-muted-foreground">
               {item.description}
             </p>
-            <div className="flex gap-6">
-              {typeof item.mergedPRs === "number" && (
-                <div>
-                  <p className="text-lg font-medium tabular-nums">
-                    {item.mergedPRs}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    PRs merged
-                  </p>
-                </div>
-              )}
-              {typeof item.repos === "number" && (
-                <div>
-                  <p className="text-lg font-medium tabular-nums">
-                    {item.repos}
-                  </p>
-                  <p className="text-xs text-muted-foreground">repos</p>
-                </div>
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-6">
+                {typeof item.mergedPRs === "number" && (
+                  <div>
+                    <p className="text-lg font-medium tabular-nums">
+                      {item.mergedPRs}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      PRs merged
+                    </p>
+                  </div>
+                )}
+                {typeof item.repos === "number" && (
+                  <div>
+                    <p className="text-lg font-medium tabular-nums">
+                      {item.repos}
+                    </p>
+                    <p className="text-xs text-muted-foreground">repos</p>
+                  </div>
+                )}
+              </div>
+              {item.link && (
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                >
+                  View profile <ExternalLink className="h-3 w-3" />
+                </a>
               )}
             </div>
           </Tile>
