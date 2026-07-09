@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { leetcodeUsername } from "@/config/Achievements";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const QUERY = `
   query userStats($username: String!) {
@@ -37,7 +37,7 @@ export async function GET() {
         query: QUERY,
         variables: { username: leetcodeUsername },
       }),
-      next: { revalidate: 3600 },
+      cache: "no-store",
     });
 
     if (!res.ok) {

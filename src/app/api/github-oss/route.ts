@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { openSourcePrograms } from "@/config/Achievements";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 async function countMergedPRs(username: string, repos?: { owner: string; repo: string }[]) {
   const repoFilter = repos?.length
@@ -23,7 +23,7 @@ async function countMergedPRs(username: string, repos?: { owner: string; repo: s
     `https://api.github.com/search/issues?q=${q}&per_page=1`,
     {
       headers,
-      next: { revalidate: 3600 },
+      cache: "no-store",
     },
   );
 
