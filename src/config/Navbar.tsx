@@ -27,5 +27,9 @@ export const navbarConfig = {
       label: 'Techs',
       href: '/techs',
     },
+    {
+      label: 'Achievements',
+      href: '/achievements',
+    },
   ] as NavItem[],
 };

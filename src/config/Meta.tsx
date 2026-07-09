@@ -168,6 +168,16 @@ export const pageMetadata: Record<string, PageMeta> = {
     ogImage: '/meta/techs.png',
     twitterCard: 'summary_large_image',
   },
+
+  // Achievements page
+  '/achievements': {
+    title: 'Achievements & Credentials - Journey Hub',
+    description:
+      'Explore my open-source milestones, LeetCode performance, hackathon placements, and earned badges.',
+    keywords: ['achievements', 'leetcode', 'open source', 'contributions', 'hackathon', 'badges'],
+    ogImage: '/meta/certificates.png',
+    twitterCard: 'summary_large_image',
+  },
 };
 
 // Helper function to get metadata for a specific page

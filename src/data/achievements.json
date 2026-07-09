@@ -1,0 +1,107 @@
+{
+  "leetcode": {
+    "username": "Quantumboy80",
+    "solved": 350,
+    "totalQuestionCount": 3200,
+    "easySolved": 150,
+    "easyTotal": 800,
+    "mediumSolved": 160,
+    "mediumTotal": 1600,
+    "hardSolved": 40,
+    "hardTotal": 800,
+    "streak": 45,
+    "rating": 1650,
+    "rank": "Top 12%",
+    "badges": [
+      {
+        "name": "Knight",
+        "icon": "🛡️",
+        "earnedDate": "Dec 2025"
+      },
+      {
+        "name": "50 Days Badge",
+        "icon": "📅",
+        "earnedDate": "Nov 2025"
+      },
+      {
+        "name": "100 Days Badge",
+        "icon": "🔥",
+        "earnedDate": "Oct 2025"
+      }
+    ]
+  },
+  "openSource": {
+    "contributions": 120,
+    "pullRequests": [
+      {
+        "repo": "vercel/next.js",
+        "title": "Fix layout transition state hydration mismatch",
+        "url": "https://github.com/vercel/next.js/pull/72300",
+        "status": "merged"
+      },
+      {
+        "repo": "supabase/supabase",
+        "title": "Add channel broadcast hook support for Next App Router",
+        "url": "https://github.com/supabase/supabase/pull/18900",
+        "status": "merged"
+      },
+      {
+        "repo": "prisma/prisma",
+        "title": "Optimize multi-tenant schema compilation queries",
+        "url": "https://github.com/prisma/prisma/pull/22100",
+        "status": "merged"
+      }
+    ],
+    "highlights": [
+      {
+        "title": "Summer of Code (SSoC) Season 4",
+        "description": "Contributed to core workflow automation modules, resulting in SSoC completion certificate.",
+        "badge": "SSoC Contributor"
+      }
+    ]
+  },
+  "hackathons": [
+    {
+      "name": "Smart India Hackathon (SIH) 2024",
+      "project": "DhabaFlow QR Storefront",
+      "placement": "Finalist",
+      "role": "Lead Full Stack Developer",
+      "description": "Led a team of 6 to build DhabaFlow, a multi-tenant QR storefront using Supabase Realtime, avoiding double-spend races using Prisma transactions.",
+      "certificate": "/certificates/fundamentals-llm.png"
+    },
+    {
+      "name": "IEM Hackfest 2025",
+      "project": "SafeRoute AI",
+      "placement": "1st Runner Up",
+      "role": "Backend Architect",
+      "description": "Built AI route mapping algorithm scoring traffic safety dynamics using Node.js and MongoDB under 36 hours.",
+      "certificate": "/certificates/ssoc-piyush.png"
+    }
+  ],
+  "profileLinks": [
+    {
+      "platform": "LeetCode",
+      "url": "https://leetcode.com/u/sayansom/",
+      "username": "sayansom",
+      "color": "from-amber-500 to-orange-600"
+    },
+    {
+      "platform": "GitHub",
+      "url": "https://github.com/Quantumboy80",
+      "username": "Quantumboy80",
+      "color": "from-zinc-700 to-zinc-900"
+    },
+    {
+      "platform": "GeeksforGeeks",
+      "url": "https://www.geeksforgeeks.org/user/sayansom625/",
+      "username": "sayansom625",
+      "color": "from-green-600 to-emerald-700"
+    },
+    {
+      "platform": "HackerRank",
+      "url": "https://www.hackerrank.com/profile/sayansom625",
+      "username": "sayansom625",
+      "color": "from-teal-500 to-emerald-600"
+    }
+  ]
+}

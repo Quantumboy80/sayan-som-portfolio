@@ -30,6 +30,10 @@ export async function getExperienceData() {
     return getContent('experience.json');
 }
 
+export async function getAchievementsData() {
+    return getContent('achievements.json');
+}
+
 export async function getSettings() {
     return getContent('settings.json');
 }
