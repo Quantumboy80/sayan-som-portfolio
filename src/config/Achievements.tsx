@@ -73,8 +73,97 @@ export const certificates = [
   },
 ];
 
-const achievementsConfig = {
-  certificates,
+export type ResearchItem = {
+  title: string;
+  venue: string;
+  role: string;
+  description: string;
+  tags: string[];
+  link?: string;
+};
+ 
+export type OpenSourceItem = {
+  program: string;
+  description: string;
+  mergedPRs?: number;
+  repos?: number;
+  link?: string;
+};
+ 
+export type HackathonItem = {
+  name: string;
+  track: string;
+  result?: string;
+  date: string;
+  link?: string;
+};
+ 
+export type CredentialItem = {
+  name: string;
+  issuer: string;
+  date: string;
+  link?: string;
+};
+ 
+export const leetcodeUsername = "sayansom"; // confirm this is your real handle
+ 
+export const research: ResearchItem[] = [
+  {
+    title: "Best Paper Award — AI-based leaf disease classification",
+    venue: "BIOSPECTRUM 2025",
+    role: "Lead author",
+    description:
+      "Recognized among peer submissions for applied computer vision work in agricultural disease detection.",
+    tags: ["Best paper award", "Computer vision"],
+    // link: "https://your-paper-link-if-public.com",
+  },
+  {
+    title: "Battery SOC/SOH estimation using Extended Kalman Filter",
+    venue: "Peer review",
+    role: "Co-author",
+    description:
+      "Thevenin equivalent circuit model with EKF for state-of-charge and state-of-health estimation, validated on NASA PCoE datasets.",
+    tags: ["EKF", "MATLAB", "NASA PCoE"],
+  },
+];
+ 
+export const openSource: OpenSourceItem[] = [
+  {
+    program: "GSSoC 2026",
+    description: "GirlScript Summer of Code contributor.",
+    mergedPRs: 0, // fill with real count
+    repos: 0, // fill with real count
+    // link: "https://github.com/Quantumboy80?tab=overview",
+  },
+];
+ 
+export const hackathons: HackathonItem[] = [
+  {
+    name: "Midnight Foundation Hackathon",
+    track: "Privacy-preserving AI / data security",
+    date: "2026",
+    // result: "Finalist", // only if true
+  },
+];
+ 
+export const credentials: CredentialItem[] = [
+  { name: "Claude 101", issuer: "Anthropic", date: "2026" },
+  { name: "Claude Code 101", issuer: "Anthropic", date: "2026" },
+  { name: "Introduction to MCP", issuer: "Anthropic", date: "2026" },
+];
+ 
+export const competitiveProgramming = {
+  icpc: "ICPC regional participant",
 };
 
+const achievementsConfig = {
+  certificates,
+  research,
+  openSource,
+  hackathons,
+  credentials,
+  competitiveProgramming,
+  leetcodeUsername
+};
+ 
 export default achievementsConfig;
