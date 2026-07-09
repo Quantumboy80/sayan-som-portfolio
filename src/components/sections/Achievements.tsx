@@ -2,27 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import {
-  Trophy,
-  GitPullRequest,
-  Zap,
-  BadgeCheck,
-  ExternalLink,
-} from "lucide-react";
-import { Line, LineChart, ResponsiveContainer } from "recharts";
-import {
-  research,
-  openSource,
-  hackathons,
-  credentials,
-} from "@/config/Achievements";
+import { Trophy, GitPullRequest, Zap, FileText, ExternalLink } from "lucide-react";
+import { research, openSourcePrograms, hackathons } from "@/config/Achievements";
 
 type LeetCodeStats = {
   solved: number;
-  ranking: number | null;
-  ratingHistory: number[];
-  currentRating: number | null;
+  easy: number;
+  medium: number;
+  hard: number;
+  badges: { id: string; name: string; icon: string }[];
 };
+
+type OssResult = { name: string; mergedPRs: number | null };
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -33,10 +24,12 @@ function Tile({
   className = "",
   children,
   delay = 0,
+  featured = false,
 }: {
   className?: string;
   children: React.ReactNode;
   delay?: number;
+  featured?: boolean;
 }) {
   return (
     <motion.div
@@ -45,20 +38,16 @@ function Tile({
       whileInView="show"
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.4, delay }}
-      className={`rounded-xl border border-border bg-card p-5 ${className}`}
+      className={`rounded-xl border bg-card p-5 ${
+        featured ? "border-l-[3px] border-l-primary border-border" : "border-border"
+      } ${className}`}
     >
       {children}
     </motion.div>
   );
 }
 
-function SectionLabel({
-  icon: Icon,
-  children,
-}: {
-  icon: React.ElementType;
-  children: React.ReactNode;
-}) {
+function SectionLabel({ icon: Icon, children }: { icon: React.ElementType; children: React.ReactNode }) {
   return (
     <div className="mb-3 flex items-center gap-2 text-sm text-muted-foreground">
       <Icon className="h-4 w-4" />
@@ -70,56 +59,53 @@ function SectionLabel({
 function LeetCodeTile() {
   const [stats, setStats] = useState<LeetCodeStats | null>(null);
   const [failed, setFailed] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     fetch("/api/leetcode")
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then(setStats)
       .catch(() => setFailed(true));
   }, []);
 
+  const total = stats ? stats.easy + stats.medium + stats.hard : 0;
+
   return (
-    <Tile className="col-span-6 flex flex-col justify-between md:col-span-2">
-      <div className="flex items-center justify-between">
+    <Tile className="col-span-6 md:col-span-3">
+      <div className="mb-3 flex items-center justify-between">
         <SectionLabel icon={Zap}>LeetCode</SectionLabel>
         {stats && !failed && (
-          <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+          <span className="rounded-md bg-green-500/10 px-2 py-0.5 text-[10px] font-medium text-green-500">
             Live
           </span>
         )}
       </div>
 
-      {failed && (
-        <p className="text-sm text-muted-foreground">Stats unavailable</p>
-      )}
+      {failed && <p className="text-sm text-muted-foreground">Stats unavailable</p>}
 
-      {!failed && (
+      {!failed && stats && (
         <>
-          <div>
-            <p className="text-2xl font-medium tabular-nums">
-              {stats?.solved ?? "—"}
-            </p>
-            <p className="text-xs text-muted-foreground">problems solved</p>
-          </div>
+          <p className="text-2xl font-medium tabular-nums">{stats.solved}</p>
+          <p className="mb-3 text-xs text-muted-foreground">problems solved</p>
 
-          {mounted && stats?.ratingHistory && stats.ratingHistory.length > 1 && (
-            <div className="mt-2 h-8 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={stats.ratingHistory.map((v, i) => ({ i, v }))}
-                >
-                  <Line
-                    type="monotone"
-                    dataKey="v"
-                    stroke="currentColor"
-                    className="text-primary"
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+          {total > 0 && (
+            <div className="mb-1 flex h-1.5 gap-0.5 overflow-hidden rounded-full">
+              <div className="bg-green-500" style={{ width: `${(stats.easy / total) * 100}%` }} />
+              <div className="bg-amber-500" style={{ width: `${(stats.medium / total) * 100}%` }} />
+              <div className="bg-red-500" style={{ width: `${(stats.hard / total) * 100}%` }} />
+            </div>
+          )}
+
+          {stats.badges.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {stats.badges.slice(0, 6).map((b) => (
+                <img
+                  key={b.id}
+                  src={b.icon}
+                  alt={b.name}
+                  title={b.name}
+                  className="h-8 w-8 rounded-md border border-border object-contain"
+                />
+              ))}
             </div>
           )}
         </>
@@ -128,85 +114,42 @@ function LeetCodeTile() {
   );
 }
 
-export function Achievements() {
+function OpenSourceTiles() {
+  const [live, setLive] = useState<OssResult[]>([]);
+
+  useEffect(() => {
+    fetch("/api/github-oss")
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d) => setLive(d.programs ?? []))
+      .catch(() => {});
+  }, []);
+
   return (
-    <section id="achievements" className="mx-auto max-w-4xl px-4 py-20">
-      <h2 className="mb-8 text-xl font-medium">Achievements</h2>
-
-      <div className="grid grid-cols-6 gap-3">
-        {/* Research — largest tile, highest signal */}
-        {research.map((item, i) => (
-          <Tile
-            key={item.title}
-            delay={i * 0.05}
-            className="col-span-6 md:col-span-4"
-          >
-            <SectionLabel icon={Trophy}>Research and recognition</SectionLabel>
-            <p className="mb-1 font-medium">{item.title}</p>
-            <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
-              {item.description}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {item.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-md bg-muted px-2.5 py-1 text-xs text-muted-foreground"
-                >
-                  {tag}
+    <>
+      {openSourcePrograms.map((program, i) => {
+        const liveResult = live.find((l) => l.name === program.name);
+        return (
+          <Tile key={program.name} delay={0.1 + i * 0.05} className="col-span-6 md:col-span-3">
+            <div className="mb-2 flex items-center justify-between">
+              <SectionLabel icon={GitPullRequest}>Open source</SectionLabel>
+              {program.live && liveResult?.mergedPRs !== null && liveResult?.mergedPRs !== undefined && (
+                <span className="rounded-md bg-green-500/10 px-2 py-0.5 text-[10px] font-medium text-green-500">
+                  Live
                 </span>
-              ))}
+              )}
             </div>
-            {item.link && (
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 inline-flex items-center gap-1 text-xs text-primary hover:underline"
-              >
-                View source <ExternalLink className="h-3 w-3" />
-              </a>
-            )}
-          </Tile>
-        ))}
-
-        <LeetCodeTile />
-
-        {/* Open source */}
-        {openSource.map((item, i) => (
-          <Tile
-            key={item.program}
-            delay={0.1 + i * 0.05}
-            className="col-span-6 md:col-span-3"
-          >
-            <SectionLabel icon={GitPullRequest}>Open source</SectionLabel>
-            <p className="mb-2 font-medium">{item.program}</p>
-            <p className="mb-3 text-sm text-muted-foreground">
-              {item.description}
-            </p>
+            <p className="mb-1 font-medium">{program.name}</p>
+            <p className="mb-3 text-sm text-muted-foreground">{program.description}</p>
             <div className="flex flex-col gap-3">
-              <div className="flex gap-6">
-                {typeof item.mergedPRs === "number" && (
-                  <div>
-                    <p className="text-lg font-medium tabular-nums">
-                      {item.mergedPRs}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      PRs merged
-                    </p>
-                  </div>
-                )}
-                {typeof item.repos === "number" && (
-                  <div>
-                    <p className="text-lg font-medium tabular-nums">
-                      {item.repos}
-                    </p>
-                    <p className="text-xs text-muted-foreground">repos</p>
-                  </div>
-                )}
-              </div>
-              {item.link && (
+              {liveResult?.mergedPRs !== null && liveResult?.mergedPRs !== undefined && (
+                <div>
+                  <p className="text-lg font-medium tabular-nums">{liveResult.mergedPRs}</p>
+                  <p className="text-xs text-muted-foreground">PRs merged</p>
+                </div>
+              )}
+              {program.link && (
                 <a
-                  href={item.link}
+                  href={program.link}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
@@ -216,10 +159,49 @@ export function Achievements() {
               )}
             </div>
           </Tile>
+        );
+      })}
+    </>
+  );
+}
+
+export function Achievements() {
+  return (
+    <section id="achievements" className="mx-auto max-w-4xl px-4 py-20">
+      <h2 className="mb-8 text-xl font-medium">Achievements</h2>
+
+      <div className="grid grid-cols-6 gap-3">
+        {research.map((item, i) => (
+          <Tile key={item.title} delay={i * 0.05} featured={i === 0} className="col-span-6 md:col-span-4">
+            <SectionLabel icon={Trophy}>Research and recognition</SectionLabel>
+            <p className="mb-1 font-medium">{item.title}</p>
+            <p className="mb-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+            <div className="mb-3 flex flex-wrap gap-2">
+              {item.tags.map((tag) => (
+                <span key={tag} className="rounded-md bg-muted px-2.5 py-1 text-xs text-muted-foreground">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-4">
+              {item.link && (
+                <a href={item.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                  View source <ExternalLink className="h-3 w-3" />
+                </a>
+              )}
+              {item.pdfPath && (
+                <a href={item.pdfPath} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                  <FileText className="h-3 w-3" /> Read PDF
+                </a>
+              )}
+            </div>
+          </Tile>
         ))}
 
-        {/* Hackathons */}
-        <Tile delay={0.15} className="col-span-6 md:col-span-3">
+        <LeetCodeTile />
+        <OpenSourceTiles />
+
+        <Tile delay={0.2} className="col-span-6 md:col-span-3">
           <SectionLabel icon={Zap}>Hackathons</SectionLabel>
           <ul className="space-y-2">
             {hackathons.map((h) => (
@@ -227,42 +209,11 @@ export function Achievements() {
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                 <span>
                   <span className="font-medium">{h.name}</span>
-                  <span className="text-muted-foreground">
-                    {" "}
-                    — {h.track}
-                  </span>
+                  <span className="text-muted-foreground"> — {h.track}</span>
                 </span>
               </li>
             ))}
           </ul>
-        </Tile>
-
-        {/* Credentials */}
-        <Tile delay={0.2} className="col-span-6">
-          <SectionLabel icon={BadgeCheck}>Credentials</SectionLabel>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {credentials.map((c) => (
-              <div
-                key={c.name}
-                className="group relative h-20 [perspective:600px]"
-              >
-                <div className="relative h-full w-full rounded-lg border border-border transition-transform duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 rounded-lg [backface-visibility:hidden]">
-                    <BadgeCheck className="h-4 w-4 text-primary" />
-                    <p className="text-center text-xs font-medium">
-                      {c.name}
-                    </p>
-                  </div>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5 rounded-lg bg-muted p-2 text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-                    <p className="text-xs font-medium">{c.issuer}</p>
-                    <p className="text-[10px] text-muted-foreground">
-                      {c.date}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </Tile>
       </div>
     </section>

@@ -80,13 +80,16 @@ export type ResearchItem = {
   description: string;
   tags: string[];
   link?: string;
+  pdfPath?: string; // e.g. "/papers/biospectrum-2025.pdf" once uploaded to /public
 };
  
-export type OpenSourceItem = {
-  program: string;
+export type OpenSourceProgram = {
+  name: string; // e.g. "GSSoC 2026", "Hacktoberfest 2026"
   description: string;
-  mergedPRs?: number;
-  repos?: number;
+  live: boolean; // if true, stats below are fetched live via /api/github-oss
+  repos?: { owner: string; repo: string }[]; // repos to check for merged PRs by you
+  githubUsername?: string; // required if live is true
+  badgeIcon?: string; // e.g. "/badges/gssoc.png" if the program has an official badge
   link?: string;
 };
  
@@ -106,6 +109,7 @@ export type CredentialItem = {
 };
  
 export const leetcodeUsername = "sayanHQR004"; // confirm this is your real handle
+export const githubUsername = "Quantumboy80";
  
 export const research: ResearchItem[] = [
   {
@@ -116,6 +120,7 @@ export const research: ResearchItem[] = [
       "Recognized among peer submissions for applied computer vision work in agricultural disease detection.",
     tags: ["Best paper award", "Computer vision"],
     // link: "https://your-paper-link-if-public.com",
+    // pdfPath: "/papers/biospectrum-2025.pdf",
   },
   {
     title: "Battery SOC/SOH estimation using Extended Kalman Filter",
@@ -124,15 +129,20 @@ export const research: ResearchItem[] = [
     description:
       "Thevenin equivalent circuit model with EKF for state-of-charge and state-of-health estimation, validated on NASA PCoE datasets.",
     tags: ["EKF", "MATLAB", "NASA PCoE"],
+    // pdfPath: "/papers/ekf-battery-soh.pdf",
   },
 ];
  
-export const openSource: OpenSourceItem[] = [
+export const openSourcePrograms: OpenSourceProgram[] = [
   {
-    program: "GSSoC 2026",
+    name: "GSSoC 2026",
     description: "GirlScript Summer of Code contributor.",
-    mergedPRs: 0, // fill with real count
-    repos: 0, // fill with real count
+    live: true,
+    githubUsername: "Quantumboy80",
+    repos: [
+      // { owner: "GSSoC-org-example", repo: "example-repo" },
+    ],
+    // badgeIcon: "/badges/gssoc-2026.png",
     link: "https://gssoc.girlscript.org/profile/fdd16455-ec38-4292-944f-4b2c66283b00",
   },
 ];
@@ -145,7 +155,7 @@ export const hackathons: HackathonItem[] = [
     // result: "Finalist", // only if true
   },
 ];
- 
+
 export const credentials: CredentialItem[] = [
   { name: "Claude 101", issuer: "Anthropic", date: "2026" },
   { name: "Claude Code 101", issuer: "Anthropic", date: "2026" },
@@ -159,11 +169,12 @@ export const competitiveProgramming = {
 const achievementsConfig = {
   certificates,
   research,
-  openSource,
+  openSourcePrograms,
   hackathons,
   credentials,
   competitiveProgramming,
-  leetcodeUsername
+  leetcodeUsername,
+  githubUsername
 };
  
 export default achievementsConfig;

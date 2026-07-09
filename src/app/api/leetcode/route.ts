@@ -15,13 +15,15 @@ const QUERY = `
           count
         }
       }
+      badges {
+        id
+        displayName
+        icon
+      }
     }
     userContestRankingHistory(username: $username) {
       attended
       rating
-      contest {
-        title
-      }
     }
   }
 `;
@@ -47,33 +49,37 @@ export async function GET() {
 
     const json = await res.json();
     const user = json?.data?.matchedUser;
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const byDifficulty: Record<string, number> = {};
+    for (const d of user.submitStatsGlobal?.acSubmissionNum ?? []) {
+      byDifficulty[d.difficulty] = d.count;
+    }
+
     const history = (json?.data?.userContestRankingHistory ?? []).filter(
       (h: { attended: boolean }) => h.attended,
     );
-
-    if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 },
-      );
-    }
-
-    const solved =
-      user.submitStatsGlobal?.acSubmissionNum?.reduce(
-        (acc: number, d: { difficulty: string; count: number }) =>
-          d.difficulty === "All" ? acc + d.count : acc,
-        0,
-      ) ?? 0;
-
     const ratingHistory = history
       .slice(-15)
       .map((h: { rating: number }) => Math.round(h.rating));
 
     return NextResponse.json({
-      solved,
+      solved: byDifficulty.All ?? 0,
+      easy: byDifficulty.Easy ?? 0,
+      medium: byDifficulty.Medium ?? 0,
+      hard: byDifficulty.Hard ?? 0,
       ranking: user.profile?.ranking ?? null,
       ratingHistory,
-      currentRating: ratingHistory.at(-1) ?? null,
+      badges: (user.badges ?? []).map(
+        (b: { id: string; displayName: string; icon: string }) => ({
+          id: b.id,
+          name: b.displayName,
+          icon: b.icon.startsWith("http") ? b.icon : `https://leetcode.com${b.icon}`,
+        }),
+      ),
     });
   } catch {
     return NextResponse.json(
