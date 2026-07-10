@@ -22,6 +22,9 @@ import Redis from '@/components/technologies/Redis';
 import WebRTC from '@/components/technologies/WebRTC';
 import GSAP from '@/components/technologies/GSAP';
 import Motion from '@/components/technologies/Motion';
+import CSharp from '@/components/technologies/CSharp';
+import DotNet from '@/components/technologies/DotNet';
+import SQLite from '@/components/technologies/SQLite';
 import React from 'react';
 
 export interface Technology {
@@ -56,14 +59,35 @@ export const experiences: Experience[] = [
     location: 'Kolkata, West Bengal, India (Remote)',
     image: '/company/nenzon.png',
     description: [
-      'Designed and built DhabaFlow, a multi-tenant QR-code table-side dining storefront utilizing Next.js, TypeScript, and Tailwind CSS mapped to Supabase for zero-latency, serverless execution.',
+      'Designed and built DhabaFlow [Status: Paused from working], a multi-tenant QR-code table-side dining storefront utilizing Next.js, TypeScript, and Tailwind CSS mapped to Supabase for zero-latency, serverless execution.',
       'Integrated Supabase Realtime for KDS live status tracking and implemented peer-to-peer WebRTC audio streams for direct guest-to-kitchen voice calling.',
       'Secured order pipelines against double-spend races using Prisma transactions, client-generated idempotency validations, and Upstash Redis rate limiting.',
+      'Engineered Offline Data Resilience & Backups (HotelEase PMS): Architected an automated, local rolling database backup service that runs on application startup, utilizing asynchronous streams with shared read/write access to prevent file locking conflicts. Includes a cleanup mechanism maintaining a strict rolling window of the 5 newest backups.',
+      'Optimized Database Storage (SQLite Compaction): Implemented an automated database defragmentation system (VACUUM) triggered when the SQLite database exceeds 50 MB. Integrated Windows Registry caching to restrict compaction execution to a maximum of once per day, preventing startup performance overhead.',
+      'Designed Guest Loyalty & Repeat-Visit Analytics: Extended the database schema and Entity Framework Core repositories to automatically track guest stay counts and last-visit dates on check-in. Exposed real-time analytics columns on the Guest Registry grid to help staff identify returning customers immediately.',
+      'Created Room Allocation & Booking Cancellation Workflow: Developed a complete booking cancellation interface and service layer. Freed locked rooms, modified booking statuses, logged security audit trails, and synced the changes to portable USB drives without generating incorrect billing invoices.',
+      'Overhauled Financial Reporting & Data Filters: Redesigned the Revenue and Operations reporting page, introducing preset filters (Today, This Week, This Month, All Time) and custom calendar date pickers. Enhanced database query performance by dynamically filtering complex LINQ joins across Invoices, Guests, and Rooms.',
+      'Resolved Operational Visibility Gaps: Fixed a critical bug where checked-out guest data was invisible to receptionists by designing an Invoices & Guest Stay History DataGrid, joining database tables to restore historical visibility of guest stays.',
     ],
     startDate: 'June 2026',
     endDate: 'Present',
     website: 'https://nenzon.com',
     technologies: [
+      {
+        name: 'C#',
+        href: 'https://learn.microsoft.com/en-us/dotnet/csharp/',
+        icon: <CSharp />,
+      },
+      {
+        name: '.NET',
+        href: 'https://dotnet.microsoft.com/',
+        icon: <DotNet />,
+      },
+      {
+        name: 'SQLite',
+        href: 'https://sqlite.org/',
+        icon: <SQLite />,
+      },
       {
         name: 'React',
         href: 'https://react.dev/',

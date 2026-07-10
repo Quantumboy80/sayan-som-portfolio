@@ -31,6 +31,9 @@ import Supabase from '@/components/technologies/Supabase';
 import Redis from '@/components/technologies/Redis';
 import WebRTC from '@/components/technologies/WebRTC';
 import GSAP from '@/components/technologies/GSAP';
+import CSharp from '@/components/technologies/CSharp';
+import DotNet from '@/components/technologies/DotNet';
+import SQLite from '@/components/technologies/SQLite';
 import React from 'react';
 
 export const iconMap: Record<string, React.FC<any>> = {
@@ -69,6 +72,12 @@ export const iconMap: Record<string, React.FC<any>> = {
     WebRTC,
     GSAP,
     "Framer Motion": Motion,
+    CSharp,
+    "C#": CSharp,
+    DotNet,
+    ".NET": DotNet,
+    ".NET 8.0": DotNet,
+    SQLite,
 };
 
 export function getIcon(name: string) {
