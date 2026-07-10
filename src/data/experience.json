@@ -2,13 +2,10 @@
   {
     "isCurrent": true,
     "company": "Nenzon Technologies (start-up)",
-    "position": "Full Stack Engineer",
+    "position": "Full Stack Engineer (HotelEase PMS)",
     "location": "Kolkata, West Bengal, India (Remote)",
     "image": "/company/nenzon.png",
     "description": [
-      "Designed and built DhabaFlow [Status: Paused from working], a multi-tenant QR-code table-side dining storefront utilizing Next.js, TypeScript, and Tailwind CSS mapped to Supabase for zero-latency, serverless execution.",
-      "Integrated Supabase Realtime for KDS live status tracking and implemented peer-to-peer WebRTC audio streams for direct guest-to-kitchen voice calling.",
-      "Secured order pipelines against double-spend races using Prisma transactions, client-generated idempotency validations, and Upstash Redis rate limiting.",
       "Engineered Offline Data Resilience & Backups (HotelEase PMS): Architected an automated, local rolling database backup service that runs on application startup, utilizing asynchronous streams with shared read/write access to prevent file locking conflicts. Includes a cleanup mechanism maintaining a strict rolling window of the 5 newest backups.",
       "Optimized Database Storage (SQLite Compaction): Implemented an automated database defragmentation system (VACUUM) triggered when the SQLite database exceeds 50 MB. Integrated Windows Registry caching to restrict compaction execution to a maximum of once per day, preventing startup performance overhead.",
       "Designed Guest Loyalty & Repeat-Visit Analytics: Extended the database schema and Entity Framework Core repositories to automatically track guest stay counts and last-visit dates on check-in. Exposed real-time analytics columns on the Guest Registry grid to help staff identify returning customers immediately.",
@@ -35,7 +32,25 @@
         "name": "SQLite",
         "href": "https://sqlite.org/",
         "icon": "SQLite"
-      },
+      }
+    ]
+  },
+  {
+    "isCurrent": false,
+    "company": "Nenzon Technologies (start-up)",
+    "position": "Full Stack Engineer (DhabaFlow)",
+    "location": "Kolkata, West Bengal, India (Remote)",
+    "image": "/company/nenzon.png",
+    "description": [
+      "Designed and built DhabaFlow, a multi-tenant QR-code table-side dining storefront utilizing Next.js, TypeScript, and Tailwind CSS mapped to Supabase for zero-latency, serverless execution.",
+      "Integrated Supabase Realtime for KDS live status tracking and implemented peer-to-peer WebRTC audio streams for direct guest-to-kitchen voice calling.",
+      "Secured order pipelines against double-spend races using Prisma transactions, client-generated idempotency validations, and Upstash Redis rate limiting."
+    ],
+    "startDate": "June 2026",
+    "endDate": "Paused",
+    "website": "https://nenzon.com",
+    "linkedin": "",
+    "technologies": [
       {
         "name": "React",
         "href": "https://react.dev/",
