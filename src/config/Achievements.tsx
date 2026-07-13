@@ -156,6 +156,24 @@ export const hackathons: HackathonItem[] = [
   },
 ];
 
+export type ArcadeItem = {
+  name: string;
+  tier: string;
+  date: string;
+  description: string;
+  imagePath?: string;
+};
+
+export const arcade: ArcadeItem[] = [
+  {
+    name: "Google Cloud Arcade",
+    tier: "Legend Tier Winner",
+    date: "2025",
+    description: "Conquered advanced cloud architect tracks, hands-on challenge labs, and tech trivia, finishing in the highest 'Legend' tier and receiving the exclusive Google Cloud swag bundle.",
+    imagePath: "/assets/gcp-arcade-goodies.jpg",
+  },
+];
+
 export const credentials: CredentialItem[] = [
   { name: "Claude 101", issuer: "Anthropic", date: "2026" },
   { name: "Claude Code 101", issuer: "Anthropic", date: "2026" },
@@ -174,7 +192,8 @@ const achievementsConfig = {
   credentials,
   competitiveProgramming,
   leetcodeUsername,
-  githubUsername
+  githubUsername,
+  arcade
 };
  
 export default achievementsConfig;

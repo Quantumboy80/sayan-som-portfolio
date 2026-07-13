@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "motion/react";
-import { Trophy, GitPullRequest, Zap, FileText, ExternalLink } from "lucide-react";
-import { research, openSourcePrograms, hackathons } from "@/config/Achievements";
+import { motion, AnimatePresence } from "motion/react";
+import { Trophy, GitPullRequest, Zap, FileText, ExternalLink, Cloud, Gift } from "lucide-react";
+import { research, openSourcePrograms, hackathons, arcade } from "@/config/Achievements";
 
 type LeetCodeStats = {
   solved: number;
@@ -166,6 +166,8 @@ function OpenSourceTiles() {
 }
 
 export function Achievements() {
+  const [selectedSwagImage, setSelectedSwagImage] = useState<string | null>(null);
+
   return (
     <section id="achievements" className="mx-auto max-w-4xl px-4 py-20">
       <h2 className="mb-8 text-xl font-medium">Achievements</h2>
@@ -215,7 +217,72 @@ export function Achievements() {
             ))}
           </ul>
         </Tile>
+
+        {/* Google Cloud Arcade */}
+        {arcade.map((item, i) => (
+          <Tile key={item.name} delay={0.25 + i * 0.05} className="col-span-6 md:col-span-3 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <SectionLabel icon={Cloud}>Google Cloud Arcade</SectionLabel>
+                <span className="rounded-md bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-500">
+                  {item.tier}
+                </span>
+              </div>
+              <p className="mb-1 font-medium">{item.name}</p>
+              <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
+                {item.description}
+              </p>
+            </div>
+            {item.imagePath && (
+              <div className="mt-2">
+                <button
+                  onClick={() => setSelectedSwagImage(item.imagePath || null)}
+                  className="group relative flex items-center gap-2 rounded-lg border border-border bg-muted/40 p-2 text-xs font-medium text-primary hover:bg-muted/80 transition-colors"
+                >
+                  <Gift className="h-3.5 w-3.5" />
+                  <span>View Swag Goodies</span>
+                </button>
+              </div>
+            )}
+          </Tile>
+        ))}
       </div>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {selectedSwagImage && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedSwagImage(null)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm cursor-pointer"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative max-w-3xl w-full rounded-2xl overflow-hidden bg-card border border-border shadow-2xl z-10 p-2"
+            >
+              <img
+                src={selectedSwagImage}
+                alt="Google Cloud Swag Goodies"
+                className="w-full h-auto max-h-[75vh] object-contain rounded-lg"
+              />
+              <div className="flex justify-between items-center p-4">
+                <p className="text-xs text-muted-foreground">Google Cloud Arcade — Legend Tier Goodies Swag</p>
+                <button
+                  onClick={() => setSelectedSwagImage(null)}
+                  className="rounded-md bg-muted px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted/80"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
