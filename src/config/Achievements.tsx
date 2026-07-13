@@ -99,6 +99,8 @@ export type HackathonItem = {
   result?: string;
   date: string;
   link?: string;
+  organizer?: string;
+  imagePath?: string;
 };
  
 export type CredentialItem = {
@@ -153,6 +155,22 @@ export const hackathons: HackathonItem[] = [
     track: "Privacy-preserving AI / data security",
     date: "2026",
     // result: "Finalist", // only if true
+  },
+  {
+    name: "Posternova 2025",
+    track: "Project presentation & explanation in poster format",
+    result: "3rd Place",
+    date: "2025",
+    organizer: "Dept. of EEE, IEI, & IEEE IAS SBC",
+    imagePath: "/assets/posternova-certificate.jpg",
+  },
+  {
+    name: "Postergen",
+    track: "AI-based poster making",
+    result: "3rd Place",
+    date: "2024",
+    organizer: "Dept. of EE & IEEE SBC",
+    imagePath: "/assets/postergen-certificate.jpg",
   },
 ];
 

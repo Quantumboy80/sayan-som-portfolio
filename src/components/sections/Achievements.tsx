@@ -204,15 +204,35 @@ export function Achievements() {
         <OpenSourceTiles />
 
         <Tile delay={0.2} className="col-span-6 md:col-span-3">
-          <SectionLabel icon={Zap}>Hackathons</SectionLabel>
-          <ul className="space-y-2">
+          <SectionLabel icon={Zap}>Hackathons & Competitions</SectionLabel>
+          <ul className="space-y-3">
             {hackathons.map((h) => (
-              <li key={h.name} className="flex items-start gap-2 text-sm">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                <span>
-                  <span className="font-medium">{h.name}</span>
-                  <span className="text-muted-foreground"> — {h.track}</span>
-                </span>
+              <li key={h.name} className="flex flex-col gap-1 pb-2 border-b border-border/40 last:border-0 last:pb-0">
+                <div className="flex items-center justify-between flex-wrap gap-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                    <span className="font-medium text-foreground">{h.name}</span>
+                    {h.result && (
+                      <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                        {h.result}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-muted-foreground">{h.date}</span>
+                </div>
+                <div className="pl-3 flex flex-col gap-1">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {h.track} {h.organizer && <span className="italic">({h.organizer})</span>}
+                  </p>
+                  {h.imagePath && (
+                    <button
+                      onClick={() => setSelectedSwagImage(h.imagePath || null)}
+                      className="self-start inline-flex items-center gap-1 text-[10px] font-medium text-primary hover:underline"
+                    >
+                      <FileText className="h-3 w-3" /> View Certificate
+                    </button>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
@@ -271,7 +291,15 @@ export function Achievements() {
                 className="w-full h-auto max-h-[75vh] object-contain rounded-lg"
               />
               <div className="flex justify-between items-center p-4">
-                <p className="text-xs text-muted-foreground">Google Cloud Arcade — Legend Tier Goodies Swag</p>
+                <p className="text-xs text-muted-foreground">
+                  {selectedSwagImage.includes("goodies")
+                    ? "Google Cloud Arcade — Legend Tier Swag Goodies"
+                    : selectedSwagImage.includes("postergen")
+                    ? "Postergen Certificate — 3rd Place Award"
+                    : selectedSwagImage.includes("posternova")
+                    ? "Posternova Certificate — 3rd Place Award"
+                    : "Achievement Certificate"}
+                </p>
                 <button
                   onClick={() => setSelectedSwagImage(null)}
                   className="rounded-md bg-muted px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted/80"
