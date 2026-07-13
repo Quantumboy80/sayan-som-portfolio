@@ -9,6 +9,7 @@ import { generateMetadata as getMetadata } from '@/config/Meta';
 import ReactLenis from 'lenis/react';
 import { ViewTransitions } from 'next-view-transitions';
 import TransitionErrorCatcher from '@/components/common/TransitionErrorCatcher';
+import NowPlaying from '@/components/common/NowPlaying';
 
 import './globals.css';
 
@@ -72,6 +73,7 @@ export default function RootLayout({
               <OnekoCat />
               <Quote />
               <Footer />
+              <NowPlaying />
               <ChatBubble />
               <UmamiAnalytics />
             </ReactLenis>
