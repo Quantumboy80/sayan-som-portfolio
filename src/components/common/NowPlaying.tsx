@@ -13,6 +13,19 @@ type SongData = {
   songUrl: string;
 };
 
+const YTMusicLogo = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path
+      fill="#FF0000"
+      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+    />
+    <path
+      fill="#FF0000"
+      d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-2 8.5v-5l4 2.5-4 2.5z"
+    />
+  </svg>
+);
+
 export default function NowPlaying() {
   const [data, setData] = useState<SongData>({
     isPlaying: false,
@@ -47,6 +60,12 @@ export default function NowPlaying() {
 
   if (!mounted) return null;
 
+  // Detect if the album art is Last.fm's default grey star placeholder
+  const hasRealArt = 
+    data.albumArt && 
+    data.albumArt.trim() !== "" && 
+    !data.albumArt.includes("2a96cbd8b46e442fc41c2b86b821562f");
+
   return (
     <div className="fixed bottom-4 left-4 z-40 flex items-center">
       <AnimatePresence mode="wait">
@@ -57,18 +76,18 @@ export default function NowPlaying() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="flex items-center gap-3 rounded-xl border border-border bg-background/80 p-2.5 pr-4 shadow-lg backdrop-blur-md max-w-[280px]"
+            className="flex items-center gap-3 rounded-xl border border-border bg-background/80 p-2.5 pr-4 shadow-lg backdrop-blur-md max-w-[290px]"
           >
-            {/* Album Art / Music Icon */}
+            {/* Album Art / YT Music Fallback Logo */}
             <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-muted border border-border flex items-center justify-center">
-              {data.albumArt ? (
+              {hasRealArt ? (
                 <img
                   src={data.albumArt}
                   alt={data.album || "Album Art"}
                   className={`h-full w-full object-cover ${data.isPlaying ? "animate-[spin_12s_linear_infinite]" : ""}`}
                 />
               ) : (
-                <Music className="h-5 w-5 text-muted-foreground" />
+                <YTMusicLogo className="h-7 w-7" />
               )}
               {data.isPlaying && (
                 <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
@@ -95,18 +114,23 @@ export default function NowPlaying() {
 
             {/* Song Text details */}
             <div className="flex flex-col min-w-0 flex-1">
-              <span className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold flex items-center gap-1">
-                {data.isPlaying ? (
-                  <>
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
-                    </span>
-                    Now Playing
-                  </>
-                ) : (
-                  "Last Played"
-                )}
+              <span className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold flex items-center justify-between gap-1">
+                <span className="flex items-center gap-1">
+                  {data.isPlaying ? (
+                    <>
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
+                      </span>
+                      Now Playing
+                    </>
+                  ) : (
+                    "Last Played"
+                  )}
+                </span>
+                <span className="flex items-center gap-0.5 text-[8px] text-red-500 font-bold lowercase tracking-normal">
+                  <YTMusicLogo className="h-2.5 w-2.5" /> Music
+                </span>
               </span>
               <a
                 href={data.songUrl}
