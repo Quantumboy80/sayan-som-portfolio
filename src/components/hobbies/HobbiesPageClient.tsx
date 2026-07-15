@@ -49,19 +49,19 @@ const data: Record<HobbyId, HobbySceneEntry[]> = {
   ],
   audioStories: [
     {
-      src: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=cover&w=400&q=80",
+      src: "/assets/hobbies/audio-1.jpg",
       offsetX: -460,
       offsetY: -80,
       rotate: 4,
     },
     {
-      src: "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=cover&w=400&q=80",
+      src: "/assets/hobbies/audio-2.jpg",
       offsetX: -20,
       offsetY: -250,
       rotate: -3,
     },
     {
-      src: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=cover&w=400&q=80",
+      src: "/assets/hobbies/audio-3.jpg",
       offsetX: 380,
       offsetY: -60,
       rotate: 5,
