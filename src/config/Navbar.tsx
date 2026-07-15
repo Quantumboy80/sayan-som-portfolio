@@ -31,5 +31,9 @@ export const navbarConfig = {
       label: 'Achievements',
       href: '/achievements',
     },
+    {
+      label: 'Hobbies',
+      href: '/hobbies',
+    },
   ] as NavItem[],
 };

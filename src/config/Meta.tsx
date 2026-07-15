@@ -178,6 +178,16 @@ export const pageMetadata: Record<string, PageMeta> = {
     ogImage: '/meta/certificates.png',
     twitterCard: 'summary_large_image',
   },
+
+  // Hobbies page
+  '/hobbies': {
+    title: 'Hobbies & Interests - Free Time',
+    description:
+      'Take a look at what I do in my free time: chess, audio stories, reading, drawing, and watching anime.',
+    keywords: ['hobbies', 'free time', 'interests', 'chess', 'reading', 'anime', 'drawing'],
+    ogImage: '/assets/luffy_avatar.jpg',
+    twitterCard: 'summary_large_image',
+  },
 };
 
 // Helper function to get metadata for a specific page
