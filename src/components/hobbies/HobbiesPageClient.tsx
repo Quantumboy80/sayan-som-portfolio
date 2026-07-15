@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronRight } from "lucide-react";
-import Container from "@/components/common/Container";
 
 type HobbyId = "chess" | "audioStories" | "readStories" | "anime" | "drawing";
 
@@ -175,25 +174,41 @@ export default function HobbiesPageClient() {
   const [hoveredText, setHoveredText] = useState<HobbyId | null>(null);
   const mousePosition = useMousePosition();
   const [mounted, setMounted] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(1200);
 
   useEffect(() => {
     setMounted(true);
+    setWindowWidth(window.innerWidth);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const clearHover = useCallback(() => setHoveredText(null), []);
   const scenes = hoveredText ? data[hoveredText] : null;
 
+  // Responsive scale factor to keep images from going off-screen on smaller devices
+  const getResponsiveScale = () => {
+    if (windowWidth < 640) return 0.35;  // Mobile
+    if (windowWidth < 1024) return 0.65; // Tablet
+    return 1.0;                          // Desktop
+  };
+
   if (!mounted) return null;
 
+  const scale = getResponsiveScale();
+
   return (
-    <Container className="min-h-[85vh] flex flex-col justify-center items-center py-16 overflow-hidden relative">
-      <div className="absolute top-12 left-6 md:left-12 flex items-center gap-2 text-muted-foreground/60 text-xs uppercase tracking-wider font-semibold">
+    <div className="w-full min-h-[90vh] relative flex flex-col justify-center items-center py-16 overflow-x-hidden select-none">
+      {/* Top Breadcrumb */}
+      <div className="absolute top-12 left-6 md:left-12 flex items-center gap-2 text-muted-foreground/60 text-xs uppercase tracking-wider font-semibold z-30">
         <span>Free Time</span>
         <ChevronRight className="h-3.5 w-3.5" />
         <span className="text-foreground font-bold">Hobbies</span>
       </div>
 
-      <div className="flex flex-col items-center justify-center gap-6 text-nowrap text-4xl font-black uppercase text-zinc-300/80 dark:text-zinc-800 *:cursor-default md:text-7xl select-none relative z-10">
+      {/* Main Text List */}
+      <div className="flex flex-col items-center justify-center gap-6 text-nowrap text-4xl font-black uppercase text-zinc-300/80 dark:text-zinc-800 *:cursor-default md:text-7xl relative z-10">
         {HOBBY_TITLES.map((title) => {
           const handleActivate = () => setHoveredText(title.id);
           
@@ -219,42 +234,47 @@ export default function HobbiesPageClient() {
         })}
       </div>
 
-      {/* Floating Scene Previews */}
+      {/* Floating Previews */}
       <AnimatePresence>
-        {scenes?.map((item, index) => (
-          <motion.div
-            key={item.src}
-            className="absolute pointer-events-none flex aspect-[3/2] w-48 md:w-64 items-center justify-center overflow-hidden rounded-xl shadow-2xl border border-white/10 dark:border-black/10 z-0 bg-muted"
-            initial={{
-              scale: 0,
-              opacity: 0,
-              x: item.offsetX,
-              y: item.offsetY,
-              rotate: item.rotate,
-            }}
-            animate={{
-              scale: 1,
-              opacity: 1,
-              x: item.offsetX + (index === 1 ? mousePosition.x / 2 : mousePosition.x),
-              y: item.offsetY + mousePosition.y,
-              rotate: item.rotate,
-            }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 220,
-              damping: 12,
-              mass: 0.5,
-            }}
-          >
-            <img
-              src={item.src}
-              alt="Hobby scene preview"
-              className="h-full w-full object-cover"
-            />
-          </motion.div>
-        ))}
+        {scenes?.map((item, index) => {
+          const xPos = (item.offsetX * scale) + (index === 1 ? mousePosition.x / 2 : mousePosition.x);
+          const yPos = (item.offsetY * scale) + mousePosition.y;
+
+          return (
+            <motion.div
+              key={item.src}
+              className="absolute pointer-events-none flex aspect-[3/2] w-48 md:w-64 items-center justify-center overflow-hidden rounded-xl shadow-2xl border border-white/10 dark:border-black/10 z-20 bg-muted"
+              initial={{
+                scale: 0,
+                opacity: 0,
+                x: item.offsetX * scale,
+                y: item.offsetY * scale,
+                rotate: item.rotate,
+              }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                x: xPos,
+                y: yPos,
+                rotate: item.rotate,
+              }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 220,
+                damping: 12,
+                mass: 0.5,
+              }}
+            >
+              <img
+                src={item.src}
+                alt="Hobby scene preview"
+                className="h-full w-full object-cover"
+              />
+            </motion.div>
+          );
+        })}
       </AnimatePresence>
-    </Container>
+    </div>
   );
 }
