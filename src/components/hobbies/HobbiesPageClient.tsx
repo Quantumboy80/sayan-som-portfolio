@@ -29,19 +29,19 @@ const HOBBY_TITLES: HobbyTitle[] = [
 const data: Record<HobbyId, HobbySceneEntry[]> = {
   chess: [
     {
-      src: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=cover&w=400&q=80",
+      src: "/assets/hobbies/chess-1.jpg",
       offsetX: -440,
       offsetY: -150,
       rotate: -6,
     },
     {
-      src: "https://images.unsplash.com/photo-1586165368502-1bad197a64e1?auto=format&fit=cover&w=400&q=80",
+      src: "/assets/hobbies/chess-2.jpg",
       offsetX: 10,
       offsetY: -280,
       rotate: 3,
     },
     {
-      src: "https://images.unsplash.com/photo-1523821741446-edb2b68bb7a0?auto=format&fit=cover&w=400&q=80",
+      src: "/assets/hobbies/chess-3.jpg",
       offsetX: 420,
       offsetY: -120,
       rotate: -4,
