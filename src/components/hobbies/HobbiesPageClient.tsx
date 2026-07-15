@@ -69,19 +69,19 @@ const data: Record<HobbyId, HobbySceneEntry[]> = {
   ],
   readStories: [
     {
-      src: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=cover&w=400&q=80",
+      src: "/assets/hobbies/reading-1.jpg",
       offsetX: -430,
       offsetY: -90,
       rotate: -5,
     },
     {
-      src: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=cover&w=400&q=80",
+      src: "/assets/hobbies/reading-2.jpg",
       offsetX: 40,
       offsetY: -220,
       rotate: 6,
     },
     {
-      src: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=cover&w=400&q=80",
+      src: "/assets/hobbies/reading-3.jpg",
       offsetX: 440,
       offsetY: 40,
       rotate: -7,
