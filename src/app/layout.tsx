@@ -5,16 +5,16 @@ import Navbar from '@/components/common/Navbar';
 import OnekoCat from '@/components/common/OnekoCat';
 import { Quote } from '@/components/common/Quote';
 import { ThemeProvider } from '@/components/common/ThemeProviders';
-import { generateMetadata as getMetadata } from '@/config/Meta';
+import { generateMetadata as getMetadata, siteConfig } from '@/config/Meta';
 import ReactLenis from 'lenis/react';
 import { ViewTransitions } from 'next-view-transitions';
 import TransitionErrorCatcher from '@/components/common/TransitionErrorCatcher';
 import NowPlaying from '@/components/common/NowPlaying';
-
+ 
 import './globals.css';
-
+ 
 export const metadata = getMetadata('/');
-
+ 
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -60,6 +60,26 @@ export default function RootLayout({
           />
         </head>
         <body className={`font-hanken-grotesk antialiased`}>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Person",
+                "name": siteConfig.author.name,
+                "url": siteConfig.url,
+                "sameAs": [
+                  `https://github.com/${siteConfig.author.github}`,
+                  `https://linkedin.com/in/${siteConfig.author.linkedin}`,
+                  "https://leetcode.com/u/sayanHQR004/",
+                  "https://gssoc.girlscript.org/profile/fdd16455-ec38-4292-944f-4b2c66283b00"
+                ],
+                "email": siteConfig.author.email,
+                "jobTitle": "Full Stack Software Engineer",
+                "description": siteConfig.description,
+              }),
+            }}
+          />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
