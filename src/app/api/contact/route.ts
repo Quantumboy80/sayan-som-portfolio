@@ -292,9 +292,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Trigger welcome auto-responder email asynchronously in the background
-    sendAutoResponseEmail(validatedData).catch((err) => {
-      console.error('Background welcome email failed:', err);
+    // Trigger welcome auto-responder email and await execution to prevent Vercel Serverless environment freezing
+    await sendAutoResponseEmail(validatedData).catch((err) => {
+      console.error('Welcome email failed:', err);
     });
 
     return NextResponse.json(
