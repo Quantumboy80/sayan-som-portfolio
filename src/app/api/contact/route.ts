@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
+import { Resend } from 'resend';
 
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
@@ -123,6 +124,144 @@ ${data.message.trim()}
   }
 }
 
+async function sendAutoResponseEmail(data: {
+  name: string;
+  email: string;
+}): Promise<boolean> {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const senderEmail = process.env.SENDER_EMAIL;
+
+  if (!resendApiKey) {
+    console.warn('RESEND_API_KEY not configured. Skipping welcome email.');
+    return true;
+  }
+
+  if (!senderEmail) {
+    console.warn('SENDER_EMAIL not configured. Skipping welcome email.');
+    return true;
+  }
+
+  const resend = new Resend(resendApiKey);
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Thank You for Visiting!</title>
+      <style>
+        body {
+          background-color: #0b0f19;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          color: #c9d1d9;
+        }
+        .container {
+          max-width: 580px;
+          margin: 40px auto;
+          background-color: #0d1117;
+          border: 1px solid #21262d;
+          border-radius: 16px;
+          padding: 40px 30px;
+          text-align: center;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .logo {
+          border-radius: 50%;
+          border: 2px solid #ff0000;
+          margin-bottom: 20px;
+        }
+        h1 {
+          color: #ffffff;
+          font-size: 26px;
+          font-weight: 800;
+          margin: 10px 0 20px 0;
+          letter-spacing: -0.5px;
+        }
+        p {
+          color: #8b949e;
+          font-size: 15px;
+          line-height: 24px;
+          margin: 0 0 20px 0;
+          text-align: left;
+        }
+        .gif-container {
+          margin: 25px 0;
+          border-radius: 12px;
+          overflow: hidden;
+          border: 1px solid #30363d;
+        }
+        .gif {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+        .button {
+          display: inline-block;
+          background: linear-gradient(135deg, #ff0000 0%, #a30000 100%);
+          color: #ffffff !important;
+          text-decoration: none;
+          padding: 12px 30px;
+          font-weight: 700;
+          border-radius: 8px;
+          margin: 20px 0;
+          box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+          font-size: 15px;
+        }
+        .footer {
+          border-top: 1px solid #21262d;
+          padding-top: 25px;
+          margin-top: 30px;
+          color: #8b949e;
+          font-size: 12px;
+          text-align: center;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/luffy_avatar.jpg" width="70" height="70" alt="Sayan Som Logo" class="logo" />
+        <h1>Thank You for Reaching Out! ⚡</h1>
+        <p>Hi ${data.name.trim()},</p>
+        <p>Thanks for visiting my portfolio and submitting a message! I've received your inquiry and will read it shortly. I usually get back to messages within 24 hours.</p>
+        
+        <div class="gif-container">
+          <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnV1azR0bm1tOHRxajF6d28xczM3ODdzc2I5aWN5aDF4dWF3dTFoZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7qE1YN7aBOFPRw8E/giphy.gif" alt="Pixel Art Coding" class="gif" />
+        </div>
+        
+        <p>In the meantime, feel free to explore my latest software engineering projects or read through my technical write-ups on my blog.</p>
+        
+        <a href="https://sayan-som-portfolio.vercel.app" class="button" target="_blank">Visit Portfolio</a>
+        
+        <div class="footer">
+          Made with ❤️ by Sayan Som • Kolkata, India
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    const response = await resend.emails.send({
+      from: senderEmail,
+      to: data.email.trim(),
+      subject: `Thank you for reaching out, ${data.name.split(' ')[0]}!`,
+      html: htmlContent,
+    });
+
+    if (response.error) {
+      console.error('Resend Email Error:', response.error);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('Error sending auto-response email:', error);
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const clientIP = getClientIP(request);
@@ -156,6 +295,11 @@ export async function POST(request: NextRequest) {
         { status: 500 },
       );
     }
+
+    // Trigger welcome auto-responder email asynchronously in the background
+    sendAutoResponseEmail(validatedData).catch((err) => {
+      console.error('Background welcome email failed:', err);
+    });
 
     return NextResponse.json(
       {
