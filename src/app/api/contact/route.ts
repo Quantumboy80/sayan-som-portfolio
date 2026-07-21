@@ -145,11 +145,12 @@ async function sendAutoResponseEmail(data: {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Thank You for Visiting!</title>
+      <title>Incoming Transmission...</title>
+      <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
       <style>
         body {
-          background-color: #0b0f19;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+          background-color: #05080e;
+          font-family: 'Share Tech Mono', 'Courier New', Courier, monospace;
           margin: 0;
           padding: 0;
           color: #c9d1d9;
@@ -157,82 +158,132 @@ async function sendAutoResponseEmail(data: {
         .container {
           max-width: 580px;
           margin: 40px auto;
-          background-color: #0d1117;
-          border: 1px solid #21262d;
-          border-radius: 16px;
+          background-color: #0a0f1d;
+          border: 4px double #00ff66;
+          border-radius: 8px;
           padding: 40px 30px;
           text-align: center;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+          box-shadow: 0 0 25px rgba(0, 255, 102, 0.15);
         }
-        .logo {
-          border-radius: 50%;
-          border: 2px solid #ff0000;
-          margin-bottom: 20px;
+        .terminal-header {
+          border-bottom: 2px dashed #00ff66;
+          padding-bottom: 15px;
+          margin-bottom: 25px;
+          text-align: left;
+        }
+        .terminal-title {
+          font-family: 'Press Start 2P', 'Courier New', monospace;
+          color: #00ff66;
+          font-size: 11px;
+          margin: 0;
+          letter-spacing: 1px;
+        }
+        .terminal-meta {
+          color: #8b949e;
+          font-size: 13px;
+          margin-top: 5px;
+        }
+        .gif-main-container {
+          margin: 25px 0;
+          border: 2px solid #30363d;
+          border-radius: 6px;
+          background-color: #05080e;
+          padding: 10px;
+          overflow: hidden;
+        }
+        .gif-main {
+          max-width: 100%;
+          height: auto;
+          image-rendering: pixelated;
+          border-radius: 4px;
         }
         h1 {
+          font-family: 'Press Start 2P', 'Courier New', monospace;
           color: #ffffff;
-          font-size: 26px;
-          font-weight: 800;
-          margin: 10px 0 20px 0;
+          font-size: 15px;
+          line-height: 24px;
+          margin: 25px 0 15px 0;
+          text-align: left;
           letter-spacing: -0.5px;
         }
         p {
-          color: #8b949e;
+          color: #a3b3c2;
           font-size: 15px;
           line-height: 24px;
           margin: 0 0 20px 0;
           text-align: left;
         }
-        .gif-container {
-          margin: 25px 0;
-          border-radius: 12px;
-          overflow: hidden;
-          border: 1px solid #30363d;
-        }
-        .gif {
-          width: 100%;
-          height: auto;
-          display: block;
+        .accent {
+          color: #00ff66;
+          font-weight: bold;
         }
         .button {
           display: inline-block;
-          background: linear-gradient(135deg, #ff0000 0%, #a30000 100%);
-          color: #ffffff !important;
+          background-color: #00ff66;
+          color: #05080e !important;
+          font-family: 'Press Start 2P', 'Courier New', monospace;
           text-decoration: none;
-          padding: 12px 30px;
-          font-weight: 700;
-          border-radius: 8px;
+          padding: 12px 26px;
+          font-weight: bold;
+          border-radius: 4px;
           margin: 20px 0;
-          box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
-          font-size: 15px;
+          font-size: 11px;
+          border: 2px solid #ffffff;
+          box-shadow: 0 4px 12px rgba(0, 255, 102, 0.35);
         }
-        .footer {
-          border-top: 1px solid #21262d;
+        .signature-section {
+          margin-top: 35px;
+          border-top: 2px dashed #21262d;
           padding-top: 25px;
-          margin-top: 30px;
-          color: #8b949e;
-          font-size: 12px;
-          text-align: center;
+          text-align: left;
+        }
+        .sig-text {
+          font-family: 'Press Start 2P', 'Courier New', monospace;
+          font-size: 10px;
+          color: #00ff66;
+          margin: 0 0 15px 0;
+        }
+        .pet-container {
+          display: inline-block;
+          vertical-align: middle;
+          margin-right: 12px;
+          border: 1px solid #30363d;
+          background-color: #05080e;
+          padding: 6px;
+          border-radius: 6px;
+        }
+        .pet-gif {
+          display: block;
+          image-rendering: pixelated;
         }
       </style>
     </head>
     <body>
       <div class="container">
-        <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/luffy_avatar.jpg" width="70" height="70" alt="Sayan Som Logo" class="logo" />
-        <h1>Thank You for Reaching Out! ⚡</h1>
-        <p>Hi ${data.name.trim()},</p>
-        <p>Thanks for visiting my portfolio and submitting a message! I've received your inquiry and will read it shortly. I usually get back to messages within 24 hours.</p>
-        
-        <div class="gif-container">
-          <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnV1azR0bm1tOHRxajF6d28xczM3ODdzc2I5aWN5aDF4dWF3dTFoZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7qE1YN7aBOFPRw8E/giphy.gif" alt="Pixel Art Coding" class="gif" />
+        <div class="terminal-header">
+          <div class="terminal-title">&gt; INCOMING_TRANSMISSION...</div>
+          <div class="terminal-meta">SYSTEM: sayan.dev // CONSOLE: ACTIVE</div>
         </div>
+
+        <div class="gif-main-container">
+          <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail/retro-computer.gif" width="350" alt="Retro Pixel Computer" class="gif-main" />
+        </div>
+
+        <h1>GREETINGS PLAYER 1,</h1>
+        <p>Your message has successfully breached the <span class="accent">sayan.dev</span> terminal boundary on <span class="accent">${new Date().toLocaleDateString()}</span>.</p>
+        <p>I have stored the incoming telemetry in my main memory buffer. A direct communication sequence will be established within <span class="accent">24 cycles</span> (hours).</p>
+        <p>In the meantime, feel free to inspect my project logs, explore my technical write-ups, or return to the main dashboard.</p>
         
-        <p>In the meantime, feel free to explore my latest software engineering projects or read through my technical write-ups on my blog.</p>
-        
-        <a href="https://sayan-som-portfolio.vercel.app" class="button" target="_blank">Visit Portfolio</a>
-        
-        <div class="footer">
-          Made with ❤️ by Sayan Som • Kolkata, India
+        <a href="https://sayan-som-portfolio.vercel.app" class="button" target="_blank">&gt; ENTER_PORTFOLIO</a>
+
+        <div class="signature-section">
+          <div class="sig-text">SYSTEM COMPANIONS ACTIVE:</div>
+          <div class="pet-container">
+            <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail/kai_zoomies.gif" width="48" height="48" alt="Kai" class="pet-gif" />
+          </div>
+          <div class="pet-container">
+            <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail/koto_idle.gif" width="48" height="48" alt="Koto" class="pet-gif" />
+          </div>
         </div>
       </div>
     </body>
