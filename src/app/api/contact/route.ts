@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
@@ -128,20 +128,21 @@ async function sendAutoResponseEmail(data: {
   name: string;
   email: string;
 }): Promise<boolean> {
-  const resendApiKey = process.env.RESEND_API_KEY;
-  const senderEmail = process.env.SENDER_EMAIL;
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_PASS; // App Password
 
-  if (!resendApiKey) {
-    console.warn('RESEND_API_KEY not configured. Skipping welcome email.');
+  if (!gmailUser || !gmailPass) {
+    console.warn('GMAIL_USER or GMAIL_PASS not configured. Skipping welcome email.');
     return true;
   }
 
-  if (!senderEmail) {
-    console.warn('SENDER_EMAIL not configured. Skipping welcome email.');
-    return true;
-  }
-
-  const resend = new Resend(resendApiKey);
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: gmailUser,
+      pass: gmailPass,
+    },
+  });
 
   const htmlContent = `
     <!DOCTYPE html>
@@ -244,20 +245,15 @@ async function sendAutoResponseEmail(data: {
   `;
 
   try {
-    const response = await resend.emails.send({
-      from: senderEmail,
+    await transporter.sendMail({
+      from: `"Sayan Som" <${gmailUser}>`,
       to: data.email.trim(),
       subject: `Thank you for reaching out, ${data.name.split(' ')[0]}!`,
       html: htmlContent,
     });
-
-    if (response.error) {
-      console.error('Resend Email Error:', response.error);
-      return false;
-    }
     return true;
   } catch (error) {
-    console.error('Error sending auto-response email:', error);
+    console.error('Error sending auto-response email via Gmail:', error);
     return false;
   }
 }
