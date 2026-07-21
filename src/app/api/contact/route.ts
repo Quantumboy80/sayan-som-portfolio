@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
 import nodemailer from 'nodemailer';
+import { siteConfig } from '@/config/Meta';
 
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
@@ -139,6 +140,11 @@ async function sendAutoResponseEmail(data: {
     },
   });
 
+  // Resolve base asset host dynamically for email clients
+  const assetBaseUrl = siteConfig.url.startsWith('http://localhost')
+    ? 'https://sayan-som-portfolio.vercel.app'
+    : siteConfig.url;
+
   const htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -149,141 +155,153 @@ async function sendAutoResponseEmail(data: {
       <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
       <style>
         body {
-          background-color: #05080e;
+          background-color: #e5ecf6;
           font-family: 'Share Tech Mono', 'Courier New', Courier, monospace;
           margin: 0;
-          padding: 0;
-          color: #c9d1d9;
+          padding: 20px 0;
+          color: #000000;
         }
         .container {
           max-width: 580px;
-          margin: 40px auto;
-          background-color: #0a0f1d;
-          border: 4px double #00ff66;
-          border-radius: 8px;
+          margin: 20px auto;
+          background-color: #fcfaf2;
+          border: 3px solid #000000;
+          border-radius: 12px;
           padding: 40px 30px;
           text-align: center;
-          box-shadow: 0 0 25px rgba(0, 255, 102, 0.15);
+          box-shadow: 6px 6px 0px 0px #000000;
         }
-        .terminal-header {
-          border-bottom: 2px dashed #00ff66;
-          padding-bottom: 15px;
-          margin-bottom: 25px;
-          text-align: left;
-        }
-        .terminal-title {
+        .header-logo {
           font-family: 'Press Start 2P', 'Courier New', monospace;
-          color: #00ff66;
-          font-size: 11px;
-          margin: 0;
-          letter-spacing: 1px;
+          font-size: 15px;
+          font-weight: bold;
+          color: #000000;
+          margin-bottom: 25px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
         }
-        .terminal-meta {
-          color: #8b949e;
-          font-size: 13px;
-          margin-top: 5px;
-        }
-        .gif-main-container {
-          margin: 25px 0;
-          border: 2px solid #30363d;
-          border-radius: 6px;
-          background-color: #05080e;
-          padding: 10px;
+        .gif-banner-container {
+          margin: 20px 0;
+          border: 3px solid #000000;
+          border-radius: 8px;
+          background-color: #000000;
           overflow: hidden;
+          line-height: 0;
         }
-        .gif-main {
-          max-width: 100%;
+        .gif-banner {
+          width: 100%;
           height: auto;
           image-rendering: pixelated;
-          border-radius: 4px;
         }
         h1 {
           font-family: 'Press Start 2P', 'Courier New', monospace;
-          color: #ffffff;
-          font-size: 15px;
-          line-height: 24px;
-          margin: 25px 0 15px 0;
+          color: #000000;
+          font-size: 14px;
+          line-height: 22px;
+          margin: 30px 0 20px 0;
           text-align: left;
-          letter-spacing: -0.5px;
         }
         p {
-          color: #a3b3c2;
+          color: #000000;
           font-size: 15px;
           line-height: 24px;
           margin: 0 0 20px 0;
           text-align: left;
         }
         .accent {
-          color: #00ff66;
+          background-color: #ffff00;
           font-weight: bold;
+          padding: 2px 4px;
+          border: 1px solid #000000;
+        }
+        .button-container {
+          margin: 30px 0;
         }
         .button {
           display: inline-block;
-          background-color: #00ff66;
-          color: #05080e !important;
+          background-color: #f3c623;
+          color: #000000 !important;
           font-family: 'Press Start 2P', 'Courier New', monospace;
           text-decoration: none;
-          padding: 12px 26px;
+          padding: 14px 28px;
           font-weight: bold;
-          border-radius: 4px;
-          margin: 20px 0;
           font-size: 11px;
-          border: 2px solid #ffffff;
-          box-shadow: 0 4px 12px rgba(0, 255, 102, 0.35);
+          border: 3px solid #000000;
+          border-radius: 8px;
+          box-shadow: inset -4px -4px 0px 0px #d89f0e, 0px 4px 0px 0px #000000;
+          transition: all 0.1s ease;
         }
-        .signature-section {
-          margin-top: 35px;
-          border-top: 2px dashed #21262d;
-          padding-top: 25px;
-          text-align: left;
+        .divider {
+          border-top: 3px solid #000000;
+          margin: 35px 0;
         }
-        .sig-text {
-          font-family: 'Press Start 2P', 'Courier New', monospace;
-          font-size: 10px;
-          color: #00ff66;
-          margin: 0 0 15px 0;
+        .footer-pet-section {
+          margin: 25px 0;
+          display: inline-flex;
+          justify-content: center;
+          gap: 15px;
         }
-        .pet-container {
-          display: inline-block;
-          vertical-align: middle;
-          margin-right: 12px;
-          border: 1px solid #30363d;
-          background-color: #05080e;
+        .pet-card {
+          border: 3px solid #000000;
+          background-color: #ffffff;
           padding: 6px;
-          border-radius: 6px;
+          border-radius: 8px;
+          box-shadow: 3px 3px 0px 0px #000000;
         }
         .pet-gif {
           display: block;
           image-rendering: pixelated;
         }
+        .footer-text {
+          font-size: 12px;
+          line-height: 18px;
+          color: #555555;
+          margin-top: 25px;
+        }
+        .footer-link {
+          color: #0000ee;
+          text-decoration: underline;
+        }
       </style>
     </head>
     <body>
       <div class="container">
-        <div class="terminal-header">
-          <div class="terminal-title">&gt; INCOMING_TRANSMISSION...</div>
-          <div class="terminal-meta">SYSTEM: sayan.dev // CONSOLE: ACTIVE</div>
+        <div class="header-logo">
+          <span>🪙</span> sayan.dev
         </div>
 
-        <div class="gif-main-container">
-          <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail/retro-computer.gif" width="350" alt="Retro Pixel Computer" class="gif-main" />
+        <div class="gif-banner-container">
+          <img src="${assetBaseUrl}/assets/mail/retro-computer.gif" alt="Retro Pixel Computer" class="gif-banner" />
         </div>
 
         <h1>GREETINGS PLAYER 1,</h1>
-        <p>Your message has successfully breached the <span class="accent">sayan.dev</span> terminal boundary on <span class="accent">${new Date().toLocaleDateString()}</span>.</p>
-        <p>I have stored the incoming telemetry in my main memory buffer. A direct communication sequence will be established within <span class="accent">24 cycles</span> (hours).</p>
-        <p>In the meantime, feel free to inspect my project logs, explore my technical write-ups, or return to the main dashboard.</p>
         
-        <a href="https://sayan-som-portfolio.vercel.app" class="button" target="_blank">&gt; ENTER_PORTFOLIO</a>
+        <p>Your incoming transmission successfully reached the <span class="accent">sayan.dev</span> terminal core on ${new Date().toLocaleDateString()}.</p>
+        
+        <p>I have registered your details in my main buffer array. An active response channel will be established in approximately <span class="accent">24 cycles</span> (hours).</p>
+        
+        <p>In the meantime, feel free to analyze my project archives, check out my latest write-ups, or navigate back to the primary console.</p>
+        
+        <div class="button-container">
+          <a href="https://sayan-som-portfolio.vercel.app" class="button" target="_blank">Visit Portfolio</a>
+        </div>
 
-        <div class="signature-section">
-          <div class="sig-text">SYSTEM COMPANIONS ACTIVE:</div>
-          <div class="pet-container">
-            <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail/kai_zoomies.gif" width="48" height="48" alt="Kai" class="pet-gif" />
+        <div class="divider"></div>
+
+        <div class="footer-pet-section">
+          <div class="pet-card">
+            <img src="${assetBaseUrl}/assets/mail/kai_zoomies.gif" width="48" height="48" alt="Kai" class="pet-gif" />
           </div>
-          <div class="pet-container">
-            <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail/koto_idle.gif" width="48" height="48" alt="Koto" class="pet-gif" />
+          <div class="pet-card">
+            <img src="${assetBaseUrl}/assets/mail/koto_idle.gif" width="48" height="48" alt="Koto" class="pet-gif" />
           </div>
+        </div>
+
+        <div class="footer-text">
+          Love <span style="font-weight: bold; color: #000000;">sayan.dev</span>? <a href="${assetBaseUrl}" class="footer-link">Explore my website</a> ✉️<br>
+          sayan.dev • Kolkata, West Bengal, India
         </div>
       </div>
     </body>
