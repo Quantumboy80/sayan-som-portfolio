@@ -72,14 +72,9 @@ async function sendToTelegram(data: {
   const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
   const telegramChatId = process.env.TELEGRAM_CHAT_ID;
 
-  if (!telegramToken) {
-    console.error('TELEGRAM_BOT_TOKEN not configured');
-    return false;
-  }
-
-  if (!telegramChatId) {
-    console.error('TELEGRAM_CHAT_ID not configured');
-    return false;
+  if (!telegramToken || !telegramChatId) {
+    // If not configured, we just skip it gracefully
+    return true;
   }
 
   const message = `
@@ -116,11 +111,11 @@ ${data.message.trim()}
     } else {
       const errorText = await response.text();
       console.error('Failed to send to Telegram:', errorText);
-      return false;
+      return true; // Return true so it doesn't crash the whole contact form
     }
   } catch (error) {
     console.error('Error sending to Telegram:', error);
-    return false;
+    return true; // Return true to keep the contact flow running
   }
 }
 
