@@ -295,7 +295,7 @@ async function sendAutoResponseEmail(
         </div>
 
         <div class="gif-banner-container">
-          <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail/top-banner.gif" alt="Top Banner Pixel GIF" class="gif-banner" />
+          <img src="https://sayan-som-portfolio.vercel.app/assets/mail/top-banner.gif" alt="Top Banner Pixel GIF" class="gif-banner" />
         </div>
 
         <h1>Transmission Logged ⚡</h1>
@@ -324,10 +324,10 @@ async function sendAutoResponseEmail(
 
         <div class="footer-pet-section">
           <div class="pet-card">
-            <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail/kai_zoomies.gif" width="48" height="48" alt="Kai" class="pet-gif" />
+            <img src="https://sayan-som-portfolio.vercel.app/assets/mail/kai_zoomies.gif" width="48" height="48" alt="Kai" class="pet-gif" />
           </div>
           <div class="pet-card">
-            <img src="https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail/koto_idle.gif" width="48" height="48" alt="Koto" class="pet-gif" />
+            <img src="https://sayan-som-portfolio.vercel.app/assets/mail/koto_idle.gif" width="48" height="48" alt="Koto" class="pet-gif" />
           </div>
         </div>
 
