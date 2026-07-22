@@ -294,7 +294,7 @@ async function sendAutoResponseEmail(
         </div>
 
         <div class="gif-banner-container">
-          <img src="${baseUrl}/assets/mail/retro-computer.gif" alt="Retro Pixel Computer" class="gif-banner" />
+          <img src="${baseUrl}/assets/mail/top-banner.gif" alt="Top Banner Pixel GIF" class="gif-banner" />
         </div>
 
         <h1>Transmission Logged ⚡</h1>
