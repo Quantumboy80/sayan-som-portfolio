@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
 import nodemailer from 'nodemailer';
+import path from 'path';
+import fs from 'fs';
 import { siteConfig } from '@/config/Meta';
 
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -140,9 +142,25 @@ async function sendAutoResponseEmail(
     },
   });
 
-  // Use GitHub Raw CDN - hosted directly on GitHub's Fastly CDN edge network.
-  // Never drops connections, independent of Vercel build/deploy cycles, trusted by Google Image Proxy.
-  const imgBase = 'https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail';
+  const attachments: Array<{
+    filename: string;
+    path: string;
+    cid: string;
+  }> = [];
+
+  const topBannerPath = path.join(process.cwd(), 'public', 'assets', 'mail', 'top-banner.gif');
+  const kaiPath = path.join(process.cwd(), 'public', 'assets', 'mail', 'kai_zoomies.gif');
+  const kotoPath = path.join(process.cwd(), 'public', 'assets', 'mail', 'koto_idle.gif');
+
+  if (fs.existsSync(topBannerPath)) {
+    attachments.push({ filename: 'top-banner.gif', path: topBannerPath, cid: 'topbanner@sayan.dev' });
+  }
+  if (fs.existsSync(kaiPath)) {
+    attachments.push({ filename: 'kai_zoomies.gif', path: kaiPath, cid: 'kaizoomies@sayan.dev' });
+  }
+  if (fs.existsSync(kotoPath)) {
+    attachments.push({ filename: 'koto_idle.gif', path: kotoPath, cid: 'kotoidle@sayan.dev' });
+  }
 
   const htmlContent = `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -164,7 +182,7 @@ async function sendAutoResponseEmail(
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 30px 0;border:2px solid #000000;border-radius:8px;overflow:hidden;background-color:#000000;">
               <tr>
                 <td style="line-height:0;font-size:0;">
-                  <img src="${imgBase}/top-banner.gif" alt="Retro Pixel Banner" width="476" style="width:100%;height:auto;display:block;" />
+                  <img src="cid:topbanner@sayan.dev" alt="Retro Pixel Banner" width="476" style="width:100%;height:auto;display:block;" />
                 </td>
               </tr>
             </table>
@@ -211,7 +229,7 @@ async function sendAutoResponseEmail(
                   <table role="presentation" cellpadding="5" cellspacing="0" border="0" style="border:2px solid #000000;background-color:#ffffff;border-radius:6px;">
                     <tr>
                       <td style="line-height:0;font-size:0;">
-                        <img src="${imgBase}/kai_zoomies.gif" width="48" height="48" alt="Kai" style="display:block;" />
+                        <img src="cid:kaizoomies@sayan.dev" width="48" height="48" alt="Kai" style="display:block;" />
                       </td>
                     </tr>
                   </table>
@@ -220,7 +238,7 @@ async function sendAutoResponseEmail(
                   <table role="presentation" cellpadding="5" cellspacing="0" border="0" style="border:2px solid #000000;background-color:#ffffff;border-radius:6px;">
                     <tr>
                       <td style="line-height:0;font-size:0;">
-                        <img src="${imgBase}/koto_idle.gif" width="48" height="48" alt="Koto" style="display:block;" />
+                        <img src="cid:kotoidle@sayan.dev" width="48" height="48" alt="Koto" style="display:block;" />
                       </td>
                     </tr>
                   </table>
@@ -247,6 +265,7 @@ async function sendAutoResponseEmail(
       to: data.email.trim(),
       subject: `Thank you for reaching out, ${data.name.split(' ')[0]}!`,
       html: htmlContent,
+      attachments: attachments.length > 0 ? attachments : undefined,
     });
     return true;
   } catch (error) {
