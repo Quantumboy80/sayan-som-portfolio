@@ -157,7 +157,7 @@ async function sendAutoResponseEmail(
     attachments.push({
       filename: 'top-banner.gif',
       path: topBannerPath,
-      cid: 'topbanner@sayan.dev',
+      cid: 'topbanner',
       contentDisposition: 'inline',
     });
   }
@@ -165,7 +165,7 @@ async function sendAutoResponseEmail(
     attachments.push({
       filename: 'kai_zoomies.gif',
       path: kaiPath,
-      cid: 'kaizoomies@sayan.dev',
+      cid: 'kaizoomies',
       contentDisposition: 'inline',
     });
   }
@@ -173,7 +173,7 @@ async function sendAutoResponseEmail(
     attachments.push({
       filename: 'koto_idle.gif',
       path: kotoPath,
-      cid: 'kotoidle@sayan.dev',
+      cid: 'kotoidle',
       contentDisposition: 'inline',
     });
   }
@@ -189,7 +189,16 @@ async function sendAutoResponseEmail(
     <body style="margin:0;padding:40px 10px;background-color:#e5ecf6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#000000;">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:540px;margin:0 auto;background-color:#fcfaf2;border:2px solid #000000;border-radius:8px;">
         <tr>
-          <td style="padding:40px 30px;text-align:center;">
+          <td style="padding:30px 30px 40px 30px;text-align:center;">
+
+            <!-- Header Browser Link -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 15px 0;">
+              <tr>
+                <td align="right">
+                  <a href="${baseUrl}" target="_blank" style="font-family:'Courier New',Courier,monospace;font-size:10px;font-weight:bold;color:#666666;text-decoration:underline;">View in browser ↗</a>
+                </td>
+              </tr>
+            </table>
 
             <!-- Header Logo -->
             <p style="font-family:'Courier New',Courier,monospace;font-size:13px;font-weight:bold;color:#000000;margin:0 0 25px 0;">🪙 sayan.dev</p>
@@ -198,7 +207,7 @@ async function sendAutoResponseEmail(
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 30px 0;border:2px solid #000000;border-radius:8px;overflow:hidden;background-color:#000000;">
               <tr>
                 <td style="line-height:0;font-size:0;">
-                  <img src="cid:topbanner@sayan.dev" alt="Retro Pixel Banner" width="476" style="width:100%;height:auto;display:block;" />
+                  <img src="cid:topbanner" alt="Retro Pixel Banner" width="476" style="width:100%;height:auto;display:block;" />
                 </td>
               </tr>
             </table>
@@ -220,7 +229,7 @@ async function sendAutoResponseEmail(
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:35px 0;">
               <tr>
                 <td align="center">
-                  <a href="${baseUrl}" target="_blank" style="display:inline-block;background-color:#f3c623;color:#000000;font-family:'Courier New',Courier,monospace;text-decoration:none;padding:14px 32px;font-weight:bold;font-size:11px;border:2px solid #000000;border-radius:6px;">Visit Portfolio</a>
+                  <a href="${baseUrl}" target="_blank" style="display:inline-block;background-color:#f3c623;color:#000000;font-family:'Courier New',Courier,monospace;text-decoration:none;padding:14px 32px;font-weight:bold;font-size:11px;border:2px solid #000000;border-radius:6px;">Visit Portfolio ↗</a>
                 </td>
               </tr>
             </table>
@@ -245,7 +254,7 @@ async function sendAutoResponseEmail(
                   <table role="presentation" cellpadding="5" cellspacing="0" border="0" style="border:2px solid #000000;background-color:#ffffff;border-radius:6px;">
                     <tr>
                       <td style="line-height:0;font-size:0;">
-                        <img src="cid:kaizoomies@sayan.dev" width="48" height="48" alt="Kai" style="display:block;" />
+                        <img src="cid:kaizoomies" width="48" height="48" alt="Kai" style="display:block;" />
                       </td>
                     </tr>
                   </table>
@@ -254,7 +263,7 @@ async function sendAutoResponseEmail(
                   <table role="presentation" cellpadding="5" cellspacing="0" border="0" style="border:2px solid #000000;background-color:#ffffff;border-radius:6px;">
                     <tr>
                       <td style="line-height:0;font-size:0;">
-                        <img src="cid:kotoidle@sayan.dev" width="48" height="48" alt="Koto" style="display:block;" />
+                        <img src="cid:kotoidle" width="48" height="48" alt="Koto" style="display:block;" />
                       </td>
                     </tr>
                   </table>
