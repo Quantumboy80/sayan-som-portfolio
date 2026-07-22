@@ -120,10 +120,10 @@ ${data.message.trim()}
   }
 }
 
-async function sendAutoResponseEmail(data: {
-  name: string;
-  email: string;
-}): Promise<boolean> {
+async function sendAutoResponseEmail(
+  data: { name: string; email: string },
+  baseUrl: string
+): Promise<boolean> {
   const gmailUser = process.env.GMAIL_USER;
   const gmailPass = process.env.GMAIL_PASS; // App Password
 
@@ -140,11 +140,6 @@ async function sendAutoResponseEmail(data: {
     },
   });
 
-  // Resolve base asset host dynamically for email clients
-  const assetBaseUrl = siteConfig.url.startsWith('http://localhost')
-    ? 'https://sayan-som-portfolio.vercel.app'
-    : siteConfig.url;
-
   const htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -152,56 +147,67 @@ async function sendAutoResponseEmail(data: {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Incoming Transmission...</title>
-      <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
       <style>
         body {
           background-color: #e5ecf6;
-          font-family: 'Share Tech Mono', 'Courier New', Courier, monospace;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
           margin: 0;
-          padding: 20px 0;
+          padding: 40px 10px;
           color: #000000;
         }
         .container {
-          max-width: 580px;
-          margin: 20px auto;
+          max-width: 540px;
+          margin: 0 auto;
           background-color: #fcfaf2;
-          border: 3px solid #000000;
-          border-radius: 12px;
+          border: 2px solid #000000;
+          border-radius: 8px;
           padding: 40px 30px;
           text-align: center;
-          box-shadow: 6px 6px 0px 0px #000000;
         }
         .header-logo {
           font-family: 'Press Start 2P', 'Courier New', monospace;
-          font-size: 15px;
+          font-size: 13px;
           font-weight: bold;
           color: #000000;
           margin-bottom: 25px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 10px;
+          gap: 8px;
         }
         .gif-banner-container {
-          margin: 20px 0;
-          border: 3px solid #000000;
+          margin: 20px 0 30px 0;
+          border: 2px solid #000000;
           border-radius: 8px;
-          background-color: #000000;
           overflow: hidden;
           line-height: 0;
+          background-color: #000000;
         }
         .gif-banner {
           width: 100%;
           height: auto;
+          display: block;
           image-rendering: pixelated;
         }
         h1 {
-          font-family: 'Press Start 2P', 'Courier New', monospace;
+          font-family: system-ui, -apple-system, sans-serif;
           color: #000000;
-          font-size: 14px;
-          line-height: 22px;
-          margin: 30px 0 20px 0;
+          font-size: 24px;
+          font-weight: 800;
+          margin: 0 0 5px 0;
           text-align: left;
+          letter-spacing: -0.5px;
+        }
+        .meta-status {
+          font-family: 'Press Start 2P', 'Courier New', monospace;
+          color: #ff5500;
+          font-size: 9px;
+          font-weight: bold;
+          letter-spacing: 0.5px;
+          text-align: left;
+          margin: 0 0 25px 0;
+          text-transform: uppercase;
         }
         p {
           color: #000000;
@@ -211,13 +217,12 @@ async function sendAutoResponseEmail(data: {
           text-align: left;
         }
         .accent {
-          background-color: #ffff00;
           font-weight: bold;
-          padding: 2px 4px;
-          border: 1px solid #000000;
+          border-bottom: 2px solid #000000;
         }
         .button-container {
-          margin: 30px 0;
+          margin: 35px 0;
+          text-align: center;
         }
         .button {
           display: inline-block;
@@ -225,17 +230,34 @@ async function sendAutoResponseEmail(data: {
           color: #000000 !important;
           font-family: 'Press Start 2P', 'Courier New', monospace;
           text-decoration: none;
-          padding: 14px 28px;
+          padding: 14px 32px;
           font-weight: bold;
           font-size: 11px;
-          border: 3px solid #000000;
-          border-radius: 8px;
+          border: 2px solid #000000;
+          border-radius: 6px;
           box-shadow: inset -4px -4px 0px 0px #d89f0e, 0px 4px 0px 0px #000000;
-          transition: all 0.1s ease;
         }
         .divider {
-          border-top: 3px solid #000000;
-          margin: 35px 0;
+          border-top: 2px solid #000000;
+          margin: 40px 0 30px 0;
+        }
+        .social-container {
+          margin: 25px 0;
+          text-align: center;
+        }
+        .social-icon {
+          display: inline-block;
+          width: 32px;
+          height: 32px;
+          line-height: 32px;
+          border-radius: 50%;
+          background-color: #000000;
+          color: #ffffff !important;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: bold;
+          margin: 0 8px;
+          text-align: center;
         }
         .footer-pet-section {
           margin: 25px 0;
@@ -244,11 +266,10 @@ async function sendAutoResponseEmail(data: {
           gap: 15px;
         }
         .pet-card {
-          border: 3px solid #000000;
+          border: 2px solid #000000;
           background-color: #ffffff;
-          padding: 6px;
-          border-radius: 8px;
-          box-shadow: 3px 3px 0px 0px #000000;
+          padding: 5px;
+          border-radius: 6px;
         }
         .pet-gif {
           display: block;
@@ -273,34 +294,44 @@ async function sendAutoResponseEmail(data: {
         </div>
 
         <div class="gif-banner-container">
-          <img src="${assetBaseUrl}/assets/mail/retro-computer.gif" alt="Retro Pixel Computer" class="gif-banner" />
+          <img src="${baseUrl}/assets/mail/retro-computer.gif" alt="Retro Pixel Computer" class="gif-banner" />
         </div>
 
-        <h1>GREETINGS PLAYER 1,</h1>
+        <h1>Transmission Logged ⚡</h1>
+        <div class="meta-status">STATUS: BUFFER QUEUE RUNNING // PORT: 8080</div>
         
-        <p>Your incoming transmission successfully reached the <span class="accent">sayan.dev</span> terminal core on ${new Date().toLocaleDateString()}.</p>
+        <p>Got a project, feedback, or a question for me?</p>
         
-        <p>I have registered your details in my main buffer array. An active response channel will be established in approximately <span class="accent">24 cycles</span> (hours).</p>
+        <p>Your incoming message successfully breached the <span class="accent">sayan.dev</span> terminal core on ${new Date().toLocaleDateString()}.</p>
+        
+        <p>I have registered your transmission details in my main buffer array. An active response channel will be established in approximately <span class="accent">24 cycles</span> (hours).</p>
         
         <p>In the meantime, feel free to analyze my project archives, check out my latest write-ups, or navigate back to the primary console.</p>
         
         <div class="button-container">
-          <a href="https://sayan-som-portfolio.vercel.app" class="button" target="_blank">Visit Portfolio</a>
+          <a href="${baseUrl}" class="button" target="_blank">Visit Portfolio</a>
         </div>
 
         <div class="divider"></div>
 
+        <div class="social-container">
+          <a href="https://github.com/Quantumboy80" class="social-icon" target="_blank">G</a>
+          <a href="https://linkedin.com/in/sayan-som-26853928b" class="social-icon" target="_blank">L</a>
+          <a href="https://leetcode.com/u/sayanHQR004/" class="social-icon" target="_blank">C</a>
+          <a href="mailto:sayansom625@gmail.com" class="social-icon">E</a>
+        </div>
+
         <div class="footer-pet-section">
           <div class="pet-card">
-            <img src="${assetBaseUrl}/assets/mail/kai_zoomies.gif" width="48" height="48" alt="Kai" class="pet-gif" />
+            <img src="${baseUrl}/assets/mail/kai_zoomies.gif" width="48" height="48" alt="Kai" class="pet-gif" />
           </div>
           <div class="pet-card">
-            <img src="${assetBaseUrl}/assets/mail/koto_idle.gif" width="48" height="48" alt="Koto" class="pet-gif" />
+            <img src="${baseUrl}/assets/mail/koto_idle.gif" width="48" height="48" alt="Koto" class="pet-gif" />
           </div>
         </div>
 
         <div class="footer-text">
-          Love <span style="font-weight: bold; color: #000000;">sayan.dev</span>? <a href="${assetBaseUrl}" class="footer-link">Explore my website</a> ✉️<br>
+          Love <span style="font-weight: bold; color: #000000;">sayan.dev</span>? <a href="${baseUrl}" class="footer-link">Explore my website</a> ✉️<br>
           sayan.dev • Kolkata, West Bengal, India
         </div>
       </div>
@@ -356,8 +387,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Resolve base URL dynamically from request headers
+    const host = request.headers.get('host') || 'sayan-som-portfolio.vercel.app';
+    const proto = request.headers.get('x-forwarded-proto') || 'https';
+    const baseUrl = `${proto}://${host}`;
+
     // Trigger welcome auto-responder email and await execution to prevent Vercel Serverless environment freezing
-    await sendAutoResponseEmail(validatedData).catch((err) => {
+    await sendAutoResponseEmail(validatedData, baseUrl).catch((err) => {
       console.error('Welcome email failed:', err);
     });
 
