@@ -146,6 +146,7 @@ async function sendAutoResponseEmail(
     filename: string;
     path: string;
     cid: string;
+    contentDisposition: 'inline';
   }> = [];
 
   const topBannerPath = path.join(process.cwd(), 'public', 'assets', 'mail', 'top-banner.gif');
@@ -153,13 +154,28 @@ async function sendAutoResponseEmail(
   const kotoPath = path.join(process.cwd(), 'public', 'assets', 'mail', 'koto_idle.gif');
 
   if (fs.existsSync(topBannerPath)) {
-    attachments.push({ filename: 'top-banner.gif', path: topBannerPath, cid: 'topbanner@sayan.dev' });
+    attachments.push({
+      filename: 'top-banner.gif',
+      path: topBannerPath,
+      cid: 'topbanner@sayan.dev',
+      contentDisposition: 'inline',
+    });
   }
   if (fs.existsSync(kaiPath)) {
-    attachments.push({ filename: 'kai_zoomies.gif', path: kaiPath, cid: 'kaizoomies@sayan.dev' });
+    attachments.push({
+      filename: 'kai_zoomies.gif',
+      path: kaiPath,
+      cid: 'kaizoomies@sayan.dev',
+      contentDisposition: 'inline',
+    });
   }
   if (fs.existsSync(kotoPath)) {
-    attachments.push({ filename: 'koto_idle.gif', path: kotoPath, cid: 'kotoidle@sayan.dev' });
+    attachments.push({
+      filename: 'koto_idle.gif',
+      path: kotoPath,
+      cid: 'kotoidle@sayan.dev',
+      contentDisposition: 'inline',
+    });
   }
 
   const htmlContent = `
