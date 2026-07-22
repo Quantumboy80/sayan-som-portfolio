@@ -141,6 +141,57 @@ async function sendAutoResponseEmail(
     },
   });
 
+  // Fetch GIF binary buffers from live CDN so Vercel Serverless function has raw byte access
+  const cdnBase = 'https://sayan-som-portfolio.vercel.app/assets/mail';
+  const [topBannerBuf, kaiBuf, kotoBuf] = await Promise.all([
+    fetch(`${cdnBase}/top-banner.gif`)
+      .then((res) => (res.ok ? res.arrayBuffer() : null))
+      .then((b) => (b ? Buffer.from(b) : null))
+      .catch(() => null),
+    fetch(`${cdnBase}/kai_zoomies.gif`)
+      .then((res) => (res.ok ? res.arrayBuffer() : null))
+      .then((b) => (b ? Buffer.from(b) : null))
+      .catch(() => null),
+    fetch(`${cdnBase}/koto_idle.gif`)
+      .then((res) => (res.ok ? res.arrayBuffer() : null))
+      .then((b) => (b ? Buffer.from(b) : null))
+      .catch(() => null),
+  ]);
+
+  const attachments: Array<{
+    filename: string;
+    content: Buffer;
+    cid: string;
+    contentDisposition: 'inline';
+  }> = [];
+
+  if (topBannerBuf) {
+    attachments.push({
+      filename: 'top-banner.gif',
+      content: topBannerBuf,
+      cid: 'topbanner',
+      contentDisposition: 'inline',
+    });
+  }
+
+  if (kaiBuf) {
+    attachments.push({
+      filename: 'kai_zoomies.gif',
+      content: kaiBuf,
+      cid: 'kaizoomies',
+      contentDisposition: 'inline',
+    });
+  }
+
+  if (kotoBuf) {
+    attachments.push({
+      filename: 'koto_idle.gif',
+      content: kotoBuf,
+      cid: 'kotoidle',
+      contentDisposition: 'inline',
+    });
+  }
+
   const htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -295,7 +346,7 @@ async function sendAutoResponseEmail(
         </div>
 
         <div class="gif-banner-container">
-          <img src="https://sayan-som-portfolio.vercel.app/assets/mail/top-banner.gif" alt="Top Banner Pixel GIF" class="gif-banner" />
+          <img src="${topBannerBuf ? 'cid:topbanner' : `${cdnBase}/top-banner.gif`}" alt="Top Banner Pixel GIF" class="gif-banner" />
         </div>
 
         <h1>Transmission Logged ⚡</h1>
@@ -324,10 +375,10 @@ async function sendAutoResponseEmail(
 
         <div class="footer-pet-section">
           <div class="pet-card">
-            <img src="https://sayan-som-portfolio.vercel.app/assets/mail/kai_zoomies.gif" width="48" height="48" alt="Kai" class="pet-gif" />
+            <img src="${kaiBuf ? 'cid:kaizoomies' : `${cdnBase}/kai_zoomies.gif`}" width="48" height="48" alt="Kai" class="pet-gif" />
           </div>
           <div class="pet-card">
-            <img src="https://sayan-som-portfolio.vercel.app/assets/mail/koto_idle.gif" width="48" height="48" alt="Koto" class="pet-gif" />
+            <img src="${kotoBuf ? 'cid:kotoidle' : `${cdnBase}/koto_idle.gif`}" width="48" height="48" alt="Koto" class="pet-gif" />
           </div>
         </div>
 
@@ -346,6 +397,7 @@ async function sendAutoResponseEmail(
       to: data.email.trim(),
       subject: `Thank you for reaching out, ${data.name.split(' ')[0]}!`,
       html: htmlContent,
+      attachments: attachments.length > 0 ? attachments : undefined,
     });
     return true;
   } catch (error) {
