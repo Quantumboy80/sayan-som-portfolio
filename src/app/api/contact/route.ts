@@ -140,9 +140,9 @@ async function sendAutoResponseEmail(
     },
   });
 
-  // Use hardcoded production CDN base - just like Codédex uses external image URLs
-  // No CID, no attachments, no buffers - Gmail Image Proxy fetches these directly
-  const imgBase = 'https://sayan-som-portfolio.vercel.app/assets/mail';
+  // Use GitHub Raw CDN - hosted directly on GitHub's Fastly CDN edge network.
+  // Never drops connections, independent of Vercel build/deploy cycles, trusted by Google Image Proxy.
+  const imgBase = 'https://raw.githubusercontent.com/Quantumboy80/sayan-som-portfolio/main/public/assets/mail';
 
   const htmlContent = `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
