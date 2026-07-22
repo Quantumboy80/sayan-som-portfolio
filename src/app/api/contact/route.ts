@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
 import nodemailer from 'nodemailer';
+import path from 'path';
 import { siteConfig } from '@/config/Meta';
 
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -294,7 +295,7 @@ async function sendAutoResponseEmail(
         </div>
 
         <div class="gif-banner-container">
-          <img src="${baseUrl}/assets/mail/top-banner.gif" alt="Top Banner Pixel GIF" class="gif-banner" />
+          <img src="cid:topbanner" alt="Top Banner Pixel GIF" class="gif-banner" />
         </div>
 
         <h1>Transmission Logged ⚡</h1>
@@ -323,10 +324,10 @@ async function sendAutoResponseEmail(
 
         <div class="footer-pet-section">
           <div class="pet-card">
-            <img src="${baseUrl}/assets/mail/kai_zoomies.gif" width="48" height="48" alt="Kai" class="pet-gif" />
+            <img src="cid:kaizoomies" width="48" height="48" alt="Kai" class="pet-gif" />
           </div>
           <div class="pet-card">
-            <img src="${baseUrl}/assets/mail/koto_idle.gif" width="48" height="48" alt="Koto" class="pet-gif" />
+            <img src="cid:kotoidle" width="48" height="48" alt="Koto" class="pet-gif" />
           </div>
         </div>
 
@@ -340,11 +341,29 @@ async function sendAutoResponseEmail(
   `;
 
   try {
+    const publicMailDir = path.join(process.cwd(), 'public', 'assets', 'mail');
     await transporter.sendMail({
       from: `"Sayan Som" <${gmailUser}>`,
       to: data.email.trim(),
       subject: `Thank you for reaching out, ${data.name.split(' ')[0]}!`,
       html: htmlContent,
+      attachments: [
+        {
+          filename: 'top-banner.gif',
+          path: path.join(publicMailDir, 'top-banner.gif'),
+          cid: 'topbanner',
+        },
+        {
+          filename: 'kai_zoomies.gif',
+          path: path.join(publicMailDir, 'kai_zoomies.gif'),
+          cid: 'kaizoomies',
+        },
+        {
+          filename: 'koto_idle.gif',
+          path: path.join(publicMailDir, 'koto_idle.gif'),
+          cid: 'kotoidle',
+        },
+      ],
     });
     return true;
   } catch (error) {
