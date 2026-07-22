@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
 import nodemailer from 'nodemailer';
-import path from 'path';
 import { siteConfig } from '@/config/Meta';
 
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -141,252 +140,103 @@ async function sendAutoResponseEmail(
     },
   });
 
-  // Fetch GIF binary buffers from live CDN so Vercel Serverless function has raw byte access
-  const cdnBase = 'https://sayan-som-portfolio.vercel.app/assets/mail';
-  const [topBannerBuf, kaiBuf, kotoBuf] = await Promise.all([
-    fetch(`${cdnBase}/top-banner.gif`)
-      .then((res) => (res.ok ? res.arrayBuffer() : null))
-      .then((b) => (b ? Buffer.from(b) : null))
-      .catch(() => null),
-    fetch(`${cdnBase}/kai_zoomies.gif`)
-      .then((res) => (res.ok ? res.arrayBuffer() : null))
-      .then((b) => (b ? Buffer.from(b) : null))
-      .catch(() => null),
-    fetch(`${cdnBase}/koto_idle.gif`)
-      .then((res) => (res.ok ? res.arrayBuffer() : null))
-      .then((b) => (b ? Buffer.from(b) : null))
-      .catch(() => null),
-  ]);
-
-  const attachments: Array<{
-    filename: string;
-    content: Buffer;
-    cid: string;
-    contentDisposition: 'inline';
-  }> = [];
-
-  if (topBannerBuf) {
-    attachments.push({
-      filename: 'top-banner.gif',
-      content: topBannerBuf,
-      cid: 'topbanner',
-      contentDisposition: 'inline',
-    });
-  }
-
-  if (kaiBuf) {
-    attachments.push({
-      filename: 'kai_zoomies.gif',
-      content: kaiBuf,
-      cid: 'kaizoomies',
-      contentDisposition: 'inline',
-    });
-  }
-
-  if (kotoBuf) {
-    attachments.push({
-      filename: 'koto_idle.gif',
-      content: kotoBuf,
-      cid: 'kotoidle',
-      contentDisposition: 'inline',
-    });
-  }
+  // Use hardcoded production CDN base - just like Codédex uses external image URLs
+  // No CID, no attachments, no buffers - Gmail Image Proxy fetches these directly
+  const imgBase = 'https://sayan-som-portfolio.vercel.app/assets/mail';
 
   const htmlContent = `
-    <!DOCTYPE html>
-    <html lang="en">
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Incoming Transmission...</title>
-      <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-      <style>
-        body {
-          background-color: #e5ecf6;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-          margin: 0;
-          padding: 40px 10px;
-          color: #000000;
-        }
-        .container {
-          max-width: 540px;
-          margin: 0 auto;
-          background-color: #fcfaf2;
-          border: 2px solid #000000;
-          border-radius: 8px;
-          padding: 40px 30px;
-          text-align: center;
-        }
-        .header-logo {
-          font-family: 'Press Start 2P', 'Courier New', monospace;
-          font-size: 13px;
-          font-weight: bold;
-          color: #000000;
-          margin-bottom: 25px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-        }
-        .gif-banner-container {
-          margin: 20px 0 30px 0;
-          border: 2px solid #000000;
-          border-radius: 8px;
-          overflow: hidden;
-          line-height: 0;
-          background-color: #000000;
-        }
-        .gif-banner {
-          width: 100%;
-          height: auto;
-          display: block;
-          image-rendering: pixelated;
-        }
-        h1 {
-          font-family: system-ui, -apple-system, sans-serif;
-          color: #000000;
-          font-size: 24px;
-          font-weight: 800;
-          margin: 0 0 5px 0;
-          text-align: left;
-          letter-spacing: -0.5px;
-        }
-        .meta-status {
-          font-family: 'Press Start 2P', 'Courier New', monospace;
-          color: #ff5500;
-          font-size: 9px;
-          font-weight: bold;
-          letter-spacing: 0.5px;
-          text-align: left;
-          margin: 0 0 25px 0;
-          text-transform: uppercase;
-        }
-        p {
-          color: #000000;
-          font-size: 15px;
-          line-height: 24px;
-          margin: 0 0 20px 0;
-          text-align: left;
-        }
-        .accent {
-          font-weight: bold;
-          border-bottom: 2px solid #000000;
-        }
-        .button-container {
-          margin: 35px 0;
-          text-align: center;
-        }
-        .button {
-          display: inline-block;
-          background-color: #f3c623;
-          color: #000000 !important;
-          font-family: 'Press Start 2P', 'Courier New', monospace;
-          text-decoration: none;
-          padding: 14px 32px;
-          font-weight: bold;
-          font-size: 11px;
-          border: 2px solid #000000;
-          border-radius: 6px;
-          box-shadow: inset -4px -4px 0px 0px #d89f0e, 0px 4px 0px 0px #000000;
-        }
-        .divider {
-          border-top: 2px solid #000000;
-          margin: 40px 0 30px 0;
-        }
-        .social-container {
-          margin: 25px 0;
-          text-align: center;
-        }
-        .social-icon {
-          display: inline-block;
-          width: 32px;
-          height: 32px;
-          line-height: 32px;
-          border-radius: 50%;
-          background-color: #000000;
-          color: #ffffff !important;
-          text-decoration: none;
-          font-size: 13px;
-          font-weight: bold;
-          margin: 0 8px;
-          text-align: center;
-        }
-        .footer-pet-section {
-          margin: 25px 0;
-          display: inline-flex;
-          justify-content: center;
-          gap: 15px;
-        }
-        .pet-card {
-          border: 2px solid #000000;
-          background-color: #ffffff;
-          padding: 5px;
-          border-radius: 6px;
-        }
-        .pet-gif {
-          display: block;
-          image-rendering: pixelated;
-        }
-        .footer-text {
-          font-size: 12px;
-          line-height: 18px;
-          color: #555555;
-          margin-top: 25px;
-        }
-        .footer-link {
-          color: #0000ee;
-          text-decoration: underline;
-        }
-      </style>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Thank you for reaching out!</title>
     </head>
-    <body>
-      <div class="container">
-        <div class="header-logo">
-          <span>🪙</span> sayan.dev
-        </div>
+    <body style="margin:0;padding:40px 10px;background-color:#e5ecf6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#000000;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:540px;margin:0 auto;background-color:#fcfaf2;border:2px solid #000000;border-radius:8px;">
+        <tr>
+          <td style="padding:40px 30px;text-align:center;">
 
-        <div class="gif-banner-container">
-          <img src="${topBannerBuf ? 'cid:topbanner' : `${cdnBase}/top-banner.gif`}" alt="Top Banner Pixel GIF" class="gif-banner" />
-        </div>
+            <!-- Header Logo -->
+            <p style="font-family:'Courier New',Courier,monospace;font-size:13px;font-weight:bold;color:#000000;margin:0 0 25px 0;">🪙 sayan.dev</p>
 
-        <h1>Transmission Logged ⚡</h1>
-        <div class="meta-status">STATUS: BUFFER QUEUE RUNNING // PORT: 8080</div>
-        
-        <p>Got a project, feedback, or a question for me?</p>
-        
-        <p>Your incoming message successfully breached the <span class="accent">sayan.dev</span> terminal core on ${new Date().toLocaleDateString()}.</p>
-        
-        <p>I have registered your transmission details in my main buffer array. An active response channel will be established in approximately <span class="accent">24 cycles</span> (hours).</p>
-        
-        <p>In the meantime, feel free to analyze my project archives, check out my latest write-ups, or navigate back to the primary console.</p>
-        
-        <div class="button-container">
-          <a href="${baseUrl}" class="button" target="_blank">Visit Portfolio</a>
-        </div>
+            <!-- Top Banner GIF -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 30px 0;border:2px solid #000000;border-radius:8px;overflow:hidden;background-color:#000000;">
+              <tr>
+                <td style="line-height:0;font-size:0;">
+                  <img src="${imgBase}/top-banner.gif" alt="Retro Pixel Banner" width="476" style="width:100%;height:auto;display:block;" />
+                </td>
+              </tr>
+            </table>
 
-        <div class="divider"></div>
+            <!-- Title -->
+            <h1 style="font-family:system-ui,-apple-system,sans-serif;color:#000000;font-size:24px;font-weight:800;margin:0 0 5px 0;text-align:left;letter-spacing:-0.5px;">Transmission Logged ⚡</h1>
+            <p style="font-family:'Courier New',Courier,monospace;color:#ff5500;font-size:9px;font-weight:bold;letter-spacing:0.5px;text-align:left;margin:0 0 25px 0;text-transform:uppercase;">STATUS: BUFFER QUEUE RUNNING // PORT: 8080</p>
 
-        <div class="social-container">
-          <a href="https://github.com/Quantumboy80" class="social-icon" target="_blank">G</a>
-          <a href="https://linkedin.com/in/sayan-som-26853928b" class="social-icon" target="_blank">L</a>
-          <a href="https://leetcode.com/u/sayanHQR004/" class="social-icon" target="_blank">C</a>
-          <a href="mailto:sayansom625@gmail.com" class="social-icon">E</a>
-        </div>
+            <!-- Body Text -->
+            <p style="color:#000000;font-size:15px;line-height:24px;margin:0 0 20px 0;text-align:left;">Got a project, feedback, or a question for me?</p>
 
-        <div class="footer-pet-section">
-          <div class="pet-card">
-            <img src="${kaiBuf ? 'cid:kaizoomies' : `${cdnBase}/kai_zoomies.gif`}" width="48" height="48" alt="Kai" class="pet-gif" />
-          </div>
-          <div class="pet-card">
-            <img src="${kotoBuf ? 'cid:kotoidle' : `${cdnBase}/koto_idle.gif`}" width="48" height="48" alt="Koto" class="pet-gif" />
-          </div>
-        </div>
+            <p style="color:#000000;font-size:15px;line-height:24px;margin:0 0 20px 0;text-align:left;">Your incoming message successfully reached the <strong style="border-bottom:2px solid #000000;">sayan.dev</strong> terminal core on ${new Date().toLocaleDateString()}.</p>
 
-        <div class="footer-text">
-          Love <span style="font-weight: bold; color: #000000;">sayan.dev</span>? <a href="${baseUrl}" class="footer-link">Explore my website</a> ✉️<br>
-          sayan.dev • Kolkata, West Bengal, India
-        </div>
-      </div>
+            <p style="color:#000000;font-size:15px;line-height:24px;margin:0 0 20px 0;text-align:left;">I have registered your transmission details in my main buffer array. An active response channel will be established in approximately <strong style="border-bottom:2px solid #000000;">24 cycles</strong> (hours).</p>
+
+            <p style="color:#000000;font-size:15px;line-height:24px;margin:0 0 20px 0;text-align:left;">In the meantime, feel free to analyze my project archives, check out my latest write-ups, or navigate back to the primary console.</p>
+
+            <!-- CTA Button -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:35px 0;">
+              <tr>
+                <td align="center">
+                  <a href="${baseUrl}" target="_blank" style="display:inline-block;background-color:#f3c623;color:#000000;font-family:'Courier New',Courier,monospace;text-decoration:none;padding:14px 32px;font-weight:bold;font-size:11px;border:2px solid #000000;border-radius:6px;">Visit Portfolio</a>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Divider -->
+            <hr style="border:none;border-top:2px solid #000000;margin:40px 0 30px 0;" />
+
+            <!-- Social Icons -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:25px auto;">
+              <tr>
+                <td style="padding:0 8px;"><a href="https://github.com/Quantumboy80" target="_blank" style="display:inline-block;width:32px;height:32px;line-height:32px;border-radius:50%;background-color:#000000;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;text-align:center;">G</a></td>
+                <td style="padding:0 8px;"><a href="https://linkedin.com/in/sayan-som-26853928b" target="_blank" style="display:inline-block;width:32px;height:32px;line-height:32px;border-radius:50%;background-color:#000000;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;text-align:center;">in</a></td>
+                <td style="padding:0 8px;"><a href="https://leetcode.com/u/sayanHQR004/" target="_blank" style="display:inline-block;width:32px;height:32px;line-height:32px;border-radius:50%;background-color:#000000;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;text-align:center;">C</a></td>
+                <td style="padding:0 8px;"><a href="mailto:sayansom625@gmail.com" style="display:inline-block;width:32px;height:32px;line-height:32px;border-radius:50%;background-color:#000000;color:#ffffff;text-decoration:none;font-size:13px;font-weight:bold;text-align:center;">✉</a></td>
+              </tr>
+            </table>
+
+            <!-- Pet GIFs -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:25px auto;">
+              <tr>
+                <td style="padding:0 8px;">
+                  <table role="presentation" cellpadding="5" cellspacing="0" border="0" style="border:2px solid #000000;background-color:#ffffff;border-radius:6px;">
+                    <tr>
+                      <td style="line-height:0;font-size:0;">
+                        <img src="${imgBase}/kai_zoomies.gif" width="48" height="48" alt="Kai" style="display:block;" />
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td style="padding:0 8px;">
+                  <table role="presentation" cellpadding="5" cellspacing="0" border="0" style="border:2px solid #000000;background-color:#ffffff;border-radius:6px;">
+                    <tr>
+                      <td style="line-height:0;font-size:0;">
+                        <img src="${imgBase}/koto_idle.gif" width="48" height="48" alt="Koto" style="display:block;" />
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Footer -->
+            <p style="font-size:12px;line-height:18px;color:#555555;margin:25px 0 0 0;">
+              Love <strong style="color:#000000;">sayan.dev</strong>? <a href="${baseUrl}" style="color:#0000ee;text-decoration:underline;">Explore my website</a> ✉️<br/>
+              sayan.dev · Kolkata, West Bengal, India
+            </p>
+
+          </td>
+        </tr>
+      </table>
     </body>
     </html>
   `;
@@ -397,7 +247,6 @@ async function sendAutoResponseEmail(
       to: data.email.trim(),
       subject: `Thank you for reaching out, ${data.name.split(' ')[0]}!`,
       html: htmlContent,
-      attachments: attachments.length > 0 ? attachments : undefined,
     });
     return true;
   } catch (error) {
