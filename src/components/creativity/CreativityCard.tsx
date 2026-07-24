@@ -1,17 +1,6 @@
-import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
 import { CreativityPostPreview } from '@/types/creativity';
 import { Link } from 'next-view-transitions';
-import Image from 'next/image';
 import React from 'react';
-
-import ArrowRight from '../svgs/ArrowRight';
-import Calender from '../svgs/Calender';
 
 interface CreativityCardProps {
   post: CreativityPostPreview;
@@ -19,7 +8,7 @@ interface CreativityCardProps {
 
 export function CreativityCard({ post }: CreativityCardProps) {
   const { slug, frontmatter } = post;
-  const { title, description, image, tags, date } = frontmatter;
+  const { title, description, tags, date } = frontmatter;
 
   const formattedDate = new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -28,60 +17,69 @@ export function CreativityCard({ post }: CreativityCardProps) {
   });
 
   return (
-    <Card className="group h-full w-full overflow-hidden border-gray-100 p-0 shadow-none transition-all dark:border-gray-800">
-      <CardHeader className="p-0">
-        <div className="relative aspect-video overflow-hidden rounded-t-lg">
-          <Link href={`/frontend-creativities/${slug}`}>
-            <Image
-              src={image}
-              alt={title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          </Link>
-        </div>
-      </CardHeader>
-      <CardContent className="p-6">
-        <div className="space-y-3">
-          <Link href={`/frontend-creativities/${slug}`}>
-            <h3 className="group-hover:text-primary line-clamp-2 text-xl leading-tight font-semibold">
-              {title}
-            </h3>
-          </Link>
-          <p className="text-secondary mt-4 line-clamp-3">{description}</p>
-        </div>
-      </CardContent>
-      <CardFooter className="p-6 pt-0">
-        <div className="flex w-full flex-col space-y-3">
-          <div className="flex flex-wrap gap-2">
-            {tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
-            {tags.length > 3 && (
-              <Badge variant="outline" className="text-xs">
-                +{tags.length - 3} more
-              </Badge>
-            )}
-          </div>
-          <div className="mt-4 flex items-center justify-between gap-2">
-            <time
-              className="text-secondary flex items-center gap-2 text-sm"
-              dateTime={date}
+    <Link
+      className="group flex flex-col gap-1 border-b border-muted/50 pb-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 last:border-0"
+      href={`/frontend-creativities/${slug}`}
+    >
+      <div className="min-w-0 flex-1 space-y-1">
+        <h3 className="text-lg font-semibold leading-tight group-hover:text-primary transition-colors z-10">
+          {title}
+        </h3>
+        <p className="line-clamp-2 text-sm text-muted-foreground">
+          {description}
+        </p>
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground capitalize"
             >
-              <Calender className="size-4" /> {formattedDate}
-            </time>
-            <Link
-              href={`/frontend-creativities/${slug}`}
-              className="text-secondary flex items-center justify-end gap-2 underline-offset-4 hover:underline"
-            >
-              Read More <ArrowRight className="size-4" />
-            </Link>
-          </div>
+              {tag}
+            </span>
+          ))}
         </div>
-      </CardFooter>
-    </Card>
+        <time
+          className="hidden items-center gap-1.5 text-xs text-muted-foreground sm:flex pt-1"
+          dateTime={date}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 256 256"
+            className="size-3.5"
+          >
+            <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-68-76a12,12,0,1,1-12-12A12,12,0,0,1,140,132Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,132ZM96,172a12,12,0,1,1-12-12A12,12,0,0,1,96,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,140,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,172Z"></path>
+          </svg>
+          {formattedDate}
+        </time>
+      </div>
+      <div className="flex flex-row items-center justify-between gap-4 sm:contents">
+        <time
+          className="flex items-center gap-1.5 text-xs text-muted-foreground sm:hidden"
+          dateTime={date}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 256 256"
+            className="size-3.5"
+          >
+            <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-68-76a12,12,0,1,1-12-12A12,12,0,0,1,140,132Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,132ZM96,172a12,12,0,1,1-12-12A12,12,0,0,1,96,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,140,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,172Z"></path>
+          </svg>
+          {formattedDate}
+        </time>
+        <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground group-hover:text-primary transition-colors shrink-0">
+          Read more
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 256 256"
+            className="size-4"
+          >
+            <path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path>
+          </svg>
+        </span>
+      </div>
+    </Link>
   );
 }

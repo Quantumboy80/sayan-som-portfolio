@@ -14,6 +14,7 @@ import {
 import { Metadata } from 'next';
 import { Link } from 'next-view-transitions';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import React from 'react';
 
 interface CreativityPostPageProps {
@@ -86,6 +87,20 @@ export default async function CreativityPostPage({ params }: CreativityPostPageP
                 <span>Back to Creativities</span>
               </Link>
             </Button>
+          </div>
+
+          {/* Cover Image */}
+          <div className="mx-auto max-w-5xl">
+            <div className="relative aspect-[1200/630] w-full overflow-hidden rounded-xl">
+              <Image
+                src={post.frontmatter.image}
+                alt={post.frontmatter.title}
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 1200px) 100vw, 1200px"
+              />
+            </div>
           </div>
 
           {/* Creativity Content */}

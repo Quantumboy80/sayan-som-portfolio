@@ -27,16 +27,6 @@ export function CreativityContent({ frontmatter, content }: CreativityContentPro
     <article className="mx-auto max-w-4xl">
       {/* Hero Section */}
       <header className="mb-8 space-y-6">
-        <div className="relative aspect-video overflow-hidden rounded-lg">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-
         <div className="space-y-4">
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
