@@ -2,6 +2,7 @@ import { CreativityContent } from '@/components/creativity/CreativityContent';
 import { CreativityList } from '@/components/creativity/CreativityList';
 import Container from '@/components/common/Container';
 import FontSizeControls from '@/components/common/FontSizeControls';
+import { FloatingTOC } from '@/components/common/FloatingTOC';
 import ArrowLeft from '@/components/svgs/ArrowLeft';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -127,6 +128,7 @@ export default async function CreativityPostPage({ params }: CreativityPostPageP
         </div>
       </Container>
       <FontSizeControls />
+      <FloatingTOC />
     </>
   );
 }
