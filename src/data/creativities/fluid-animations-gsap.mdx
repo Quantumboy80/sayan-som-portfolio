@@ -1,0 +1,77 @@
+---
+title: 'Fluid Animations with GSAP & ScrollTrigger'
+description: 'How to build highly responsive, smooth, scroll-driven animations using GSAP and ScrollTrigger in React.'
+image: '/project/syncify.png'
+tags: ['animation', 'gsap', 'frontend', 'ui-ux']
+date: '2026-07-20'
+isPublished: true
+---
+
+## Introduction
+
+Animated websites are no longer just a luxury; they are a key part of modern storytelling and user experience. When users land on a website, they want to feel a sense of flow and seamlessness. This guide explains how to achieve exactly that using **GSAP (GreenSock Animation Platform)** and **ScrollTrigger** within a Next.js/React environment.
+
+---
+
+## The Tech Stack
+
+Building smooth interactive experiences requires a robust tech stack that doesn't sacrifice page performance:
+- **Framework:** Next.js (App Router)
+- **Animation Engine:** GSAP (GreenSock)
+- **Scroll Physics:** Lenis (for smooth virtual scrolling)
+- **Styling:** Tailwind CSS
+
+---
+
+## Design Principles
+
+When designing animations, follow these core principles:
+1. **Purpose-Driven:** Never animate for the sake of animating. Every transition should guide the user's focus or signal page hierarchy.
+2. **Performance First:** Use CSS transforms (`translate3d`, `scale`, `rotate`) instead of properties like `width`, `height`, or `top` which trigger layout recalculations (reflows).
+3. **Responsive Timing:** Keep animations snappy. A duration of `0.4s` to `0.6s` is generally the sweet spot for interactive states.
+
+---
+
+## Implementation Guide
+
+Here is a simple example of how to initialize a ScrollTrigger animation inside a React hook:
+
+```javascript
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default function AnimatedSection() {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from('.reveal-text', {
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 80%',
+          end: 'bottom 20%',
+          scrub: true,
+        },
+        opacity: 0,
+        y: 50,
+        duration: 1,
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div ref={containerRef} className="py-24">
+      <h2 className="reveal-text text-4xl font-bold">
+        Smooth Scroll Reveal!
+      </h2>
+    </div>
+  );
+}
+```
+
+This ensures animations are scoped properly and clean up after themselves, avoiding memory leaks and stray triggers!

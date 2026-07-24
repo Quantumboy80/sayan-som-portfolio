@@ -8,6 +8,7 @@ import Hero from '@/components/landing/Hero';
 import Journey from '@/components/landing/Journey';
 import Work from '@/components/landing/Projects';
 import Setup from '@/components/landing/Setup';
+import MotionLab from '@/components/landing/MotionLab';
 import { getSettings } from '@/lib/content';
 import React from 'react';
 
@@ -28,6 +29,7 @@ export default async function page() {
       {sections.cta && <CTA />}
       {sections.setup && <Setup />}
       {sections.journey && <Journey />}
+      {sections.motionLab && <MotionLab />}
     </Container>
   );
 }

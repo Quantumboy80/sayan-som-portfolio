@@ -9,6 +9,7 @@
     "certificates": true,
     "cta": true,
     "setup": true,
-    "journey": true
+    "journey": true,
+    "motionLab": true
   }
 }

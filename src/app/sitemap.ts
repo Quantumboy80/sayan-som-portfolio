@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/gears',
     '/setup',
     '/contact',
+    '/frontend-creativities',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
@@ -71,5 +72,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     console.error('Error reading blogs for sitemap:', error);
   }
 
-  return [...staticRoutes, ...projectRoutes, ...blogRoutes];
+  // Dynamic frontend-creativities routes
+  let creativityRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const creativitiesDir = path.join(process.cwd(), 'src/data/creativities');
+    if (fs.existsSync(creativitiesDir)) {
+      const files = fs.readdirSync(creativitiesDir);
+      creativityRoutes = files
+        .filter((file) => file.endsWith('.mdx'))
+        .map((file) => {
+          const slug = file.replace('.mdx', '');
+          return {
+            url: `${baseUrl}/frontend-creativities/${slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly' as const,
+            priority: 0.6,
+          };
+        });
+    }
+  } catch (error) {
+    console.error('Error reading creativities for sitemap:', error);
+  }
+
+  return [...staticRoutes, ...projectRoutes, ...blogRoutes, ...creativityRoutes];
 }

@@ -188,6 +188,16 @@ export const pageMetadata: Record<string, PageMeta> = {
     ogImage: '/assets/luffy_avatar.jpg',
     twitterCard: 'summary_large_image',
   },
+
+  // Frontend Creativities page
+  '/frontend-creativities': {
+    title: 'Frontend Creativities - Motion Lab',
+    description:
+      'Explore my creative frontend animations, interactions, and design ideas.',
+    keywords: ['frontend', 'creativity', 'animations', 'motion lab', 'ui-ux', 'interactions'],
+    ogImage: '/meta/projects.png',
+    twitterCard: 'summary_large_image',
+  },
 };
 
 // Helper function to get metadata for a specific page
