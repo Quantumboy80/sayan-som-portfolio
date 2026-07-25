@@ -36,19 +36,47 @@ function getYouTubeEmbedUrl(url: string): string | null {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
   const youtubeEmbedUrl = project.video ? getYouTubeEmbedUrl(project.video) : null;
+
+  const ytVideoId = project.video ? project.video.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/)?.[1] : null;
+  const youtubeHoverUrl = ytVideoId ? `https://www.youtube.com/embed/${ytVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytVideoId}` : null;
 
   return (
     <Card className="group h-full w-full overflow-hidden border-gray-100 p-0 shadow-none transition-all dark:border-gray-800">
       <CardHeader className="p-0">
-        <div className="group relative aspect-video overflow-hidden">
-          <Image
-            className="h-full w-full object-cover"
-            src={project.image}
-            alt={project.title}
-            width={1920}
-            height={1080}
-          />
+        <div 
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="group relative aspect-video overflow-hidden"
+        >
+          {project.video && isHovered ? (
+            youtubeHoverUrl ? (
+              <iframe
+                className="h-full w-full object-cover"
+                src={youtubeHoverUrl}
+                title={project.title}
+                allow="autoplay"
+              />
+            ) : (
+              <video
+                src={project.video}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="h-full w-full object-cover"
+              />
+            )
+          ) : (
+            <Image
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              src={project.image}
+              alt={project.title}
+              width={1920}
+              height={1080}
+            />
+          )}
           {project.video && (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>

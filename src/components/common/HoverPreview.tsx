@@ -6,11 +6,12 @@ import React, { useState, useRef } from 'react';
 
 interface HoverPreviewProps {
   image: string;
+  video?: string;
   title: string;
   children: React.ReactNode;
 }
 
-export function HoverPreview({ image, title, children }: HoverPreviewProps) {
+export function HoverPreview({ image, video, title, children }: HoverPreviewProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
@@ -49,13 +50,24 @@ export function HoverPreview({ image, title, children }: HoverPreviewProps) {
             }}
           >
             <div className="relative h-full w-full overflow-hidden rounded-lg">
-              <Image
-                src={image}
-                alt={title}
-                fill
-                className="object-cover"
-                sizes="260px"
-              />
+              {video ? (
+                <video
+                  src={video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <Image
+                  src={image}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                  sizes="260px"
+                />
+              )}
             </div>
           </motion.div>
         )}

@@ -9,7 +9,7 @@ interface BlogCardProps {
 
 export function BlogCard({ post }: BlogCardProps) {
   const { slug, frontmatter } = post;
-  const { title, description, image, tags, date } = frontmatter;
+  const { title, description, image, video, tags, date } = frontmatter;
 
   const formattedDate = new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -18,7 +18,7 @@ export function BlogCard({ post }: BlogCardProps) {
   });
 
   return (
-    <HoverPreview image={image} title={title}>
+    <HoverPreview image={image} video={video} title={title}>
       <Link
         className="group flex flex-col gap-1 border-b border-muted/50 pb-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 last:border-0"
         href={`/blog/${slug}`}

@@ -2,7 +2,70 @@ import { CodeCopyButton } from '@/components/blog/CodeCopyButton';
 import Image from 'next/image';
 import React from 'react';
 
+import ReactIcon from '@/components/technologies/ReactIcon';
+import ThreeJs from '@/components/technologies/ThreeJs';
+import TypeScript from '@/components/technologies/TypeScript';
+import GSAP from '@/components/technologies/GSAP';
+import CSS from '@/components/technologies/CSS';
+import Html from '@/components/technologies/Html';
+import Motion from '@/components/technologies/Motion';
+
+const techIcons: Record<string, React.ComponentType<any>> = {
+  react: ReactIcon,
+  threejs: ThreeJs,
+  typescript: TypeScript,
+  gsap: GSAP,
+  css: CSS,
+  html: Html,
+  motion: Motion,
+  vite: () => (
+    <svg viewBox="0 0 24 24" className="size-4" fill="currentColor">
+      <path fill="#646CFF" d="M12 2L2 22h20L12 2zm.5 15.5l-2.5-4h5l-2.5 4z" />
+    </svg>
+  ),
+  r3f: ThreeJs,
+  drei: ThreeJs,
+  rapier: ThreeJs,
+  ssao: ThreeJs,
+  canvas: Html,
+};
+
+export const TechItem = ({ name, icon, role }: { name: string; icon: string; role: string }) => {
+  const IconComponent = techIcons[icon.toLowerCase()] || ReactIcon;
+  return (
+    <div className="flex items-center gap-4 rounded-xl border border-muted/30 p-3 bg-muted/5 dark:bg-muted/10">
+      {/* Expanding Skill Tag */}
+      <div className="flex-shrink-0">
+        <div className="skill-inner-shadow group inline-flex h-9 items-center justify-center rounded-md border border-dashed border-black/20 bg-black/5 px-2.5 text-sm text-black transition-all duration-300 ease-in-out dark:border-white/30 dark:bg-white/15 dark:text-white hover:px-3">
+          <div className="size-4 flex-shrink-0 flex items-center justify-center">
+            <IconComponent className="size-4" />
+          </div>
+          <span className="max-w-0 overflow-hidden opacity-0 transition-all duration-300 ease-in-out group-hover:ml-2 group-hover:max-w-xs group-hover:opacity-100 text-sm font-bold whitespace-nowrap">
+            {name}
+          </span>
+        </div>
+      </div>
+      {/* Role Description */}
+      <div className="min-w-0 flex-1">
+        <p className="text-sm text-muted-foreground leading-snug">
+          {role}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export const TechStack = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="my-6 grid gap-4 sm:grid-cols-2">
+      {children}
+    </div>
+  );
+};
+
 export const CreativityComponents = {
+  TechStack,
+  TechItem,
   // Override default image component
   img: ({
     src,
