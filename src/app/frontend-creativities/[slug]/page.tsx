@@ -90,18 +90,30 @@ export default async function CreativityPostPage({ params }: CreativityPostPageP
             </Button>
           </div>
 
-          {/* Cover Image */}
+          {/* Cover Image / Video */}
           <div className="mx-auto max-w-5xl">
-            <div className="relative aspect-[1200/630] w-full overflow-hidden rounded-xl">
-              <Image
-                src={post.frontmatter.image}
-                alt={post.frontmatter.title}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 1200px) 100vw, 1200px"
+            {post.frontmatter.video ? (
+              <video
+                src={post.frontmatter.video}
+                controls
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full rounded-xl object-cover aspect-[1200/630]"
               />
-            </div>
+            ) : (
+              <div className="relative aspect-[1200/630] w-full overflow-hidden rounded-xl">
+                <Image
+                  src={post.frontmatter.image}
+                  alt={post.frontmatter.title}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 1200px) 100vw, 1200px"
+                />
+              </div>
+            )}
           </div>
 
           {/* Creativity Content */}
