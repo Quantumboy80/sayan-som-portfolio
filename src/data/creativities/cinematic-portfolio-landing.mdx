@@ -137,33 +137,9 @@ The curved cap transition at the top of `#work` is defined dynamically by an SVG
 ### A. Layout Stacking Context (Z-Index Layering)
 The following diagram illustrates how layers are stacked to create the sticky uncover reveal effect:
 
-```mermaid
-graph TD
-    A["Canvas Layer (Fixed, zIndex: 8)"] --> B["Header/Nav Menu (Fixed, zIndex: 10)"]
-    C["Main Content Wrapper (Relative, zIndex: 2, background: #E4E4E4)"] --> D["Hero Section"]
-    C --> E["Selected Projects Section (#work)"]
-    C --> F["About WebGL Section (#about)"]
-    G["Contact Footer (Sticky, zIndex: 1)"] --> H["Parallax Background Typography"]
-    G --> I["Frosted Contact Form"]
-    G --> J["Ambient Particle Canvas"]
-```
+![Layout Stacking Context](/assets/layer-stacking-diagram.png)
 
 ### B. Scroll Reveal Flow
 The following sequence diagram shows the transition of layers as the user scrolls from the Hero section down to the footer:
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as Scroll Action
-    participant Hero as Sticky Hero (0-280vh)
-    participant Wrapper as Foreground Card (zIndex: 2)
-    participant Footer as Sticky Footer (zIndex: 1)
-
-    User->>Hero: Scrolls Down (0 -> 180vh)
-    Note over Hero: Character disintegrates into falling blocks
-    User->>Wrapper: Scrolls Past Hero (180vh -> 280vh)
-    Note over Wrapper: Foreground Card covers Hero view
-    User->>Footer: Scrolls to Bottom (maxScroll - 580px)
-    Note over Footer: Footer is uncovered like a curtain
-    Note over Footer: Giant title rises, sharpens, and scales up
-```
+![Scroll Reveal Flow](/assets/scroll-reveal-flow.png)
