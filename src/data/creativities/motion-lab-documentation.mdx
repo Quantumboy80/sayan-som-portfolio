@@ -1,0 +1,156 @@
+---
+title: 'MOTION LAB: Technical & Architectural Documentation'
+description: 'Welcome to the official developer documentation for MOTION LAB (formerly TOONHUB), a premium, motion-heavy landing page built in React, TypeScript, and Tailwind CSS. This showcase integrates custom scroll timelines, interactive blueprints, and custom cursor-following video portals.'
+image: '/project/syncify.png'
+video: '/assets/motion-lab.mp4'
+tags: ['React 19', 'Vite', 'Tailwind CSS v4', 'Scroll Physics']
+date: '2026-07-25'
+isPublished: true
+---
+
+# MOTION LAB - Technical & Architectural Documentation
+
+Welcome to the official developer documentation for **MOTION LAB** (formerly TOONHUB), a premium, motion-heavy landing page built in React, TypeScript, and Tailwind CSS. This showcase integrates custom scroll timelines, interactive blueprints, and custom cursor-following video portals.
+
+---
+
+## 🏗️ How This Project Was Built
+
+The project was constructed following a modular, performance-oriented workflow:
+1. **Scaffolding**: Created a modern React 19 + TypeScript template using Vite for instant building and compilation.
+2. **Styling Integration**: Configured Tailwind CSS v4 in `vite.config.ts` and `src/index.css`, establishing a robust layout coordinate grid (`.grid-bg`) and standard keyframe systems.
+3. **Scroll Timeline Architecture**: Built a native window-scroll listener that updates the scroll state (`scrollY`), mapping scroll depths to normalized ranges (`0.0` to `1.0`) to avoid heavy third-party scroll libraries.
+4. **Section Assembly**:
+   - **Hero Carousel**: An interactive carousel featuring character figurines that morph position on scroll.
+   - **Anatomy Specs**: Hotspots that project dotted connector blueprints matching active spec cards.
+   - **Horizontal Gallery**: A custom `400vw` slider that translates horizontally while vertical scrolling is pinned, holding the final blue variant on-screen.
+   - **Expanding Video Portal**: A local screen recording video that enlarges from a card to a full-screen layout.
+   - **Interactive Play/Pause**: A cursor follower button that replaces the default browser mouse pointer inside the video block.
+   - **Creative Lab & Pre-order Footer**: A layout equipped with magnetic CTA buttons and sliding link animations.
+
+---
+
+## 💻 Tech Stack
+
+The project is built on a modern TypeScript React stack:
+
+<TechStack>
+  <TechItem name="React 19.0.0" icon="react" role="Functional Components, Hook States, Ref Trees" />
+  <TechItem name="TypeScript" icon="typescript" role="Strict Typings, Compile-safe Interfaces" />
+  <TechItem name="Vite 8.1.5" icon="vite" role="Hot Module Replacement, optimized bundling" />
+  <TechItem name="Tailwind CSS v4" icon="css" role="Theme variables, grid utilities, viewport helpers" />
+</TechStack>
+
+---
+
+## 🧮 Mathematics & Scroll Physics
+
+### 1. Normalized Scroll Progress
+The animations are driven by relative progress parameters mapped between scroll boundaries:
+
+<div className="my-6 border border-muted/30 rounded-xl p-5 bg-muted/5 dark:bg-muted/10 font-sans space-y-4">
+  <div>
+    <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Hero Carousel Section (0 &rarr; 1 vh)</div>
+    <div className="text-xl font-mono text-foreground font-semibold">
+      p<sub>1</sub> = clamp(scrollY / vh, 0, 1)
+    </div>
+  </div>
+  <div className="border-t border-muted/20 pt-3">
+    <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Anatomy Showcase Section (1 vh &rarr; 2 vh)</div>
+    <div className="text-xl font-mono text-foreground font-semibold">
+      p<sub>2</sub> = clamp((scrollY - vh) / vh, 0, 1)
+    </div>
+  </div>
+  <div className="border-t border-muted/20 pt-3">
+    <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Horizontal Gallery Translation (2 vh &rarr; 5 vh)</div>
+    <div className="text-xl font-mono text-foreground font-semibold">
+      translateProgress = clamp((scrollY - 2vh) / 3vh, 0, 1)
+    </div>
+  </div>
+  <div className="border-t border-muted/20 pt-3">
+    <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Video Portal Expansion (6 vh &rarr; 7.2 vh)</div>
+    <div className="text-xl font-mono text-foreground font-semibold">
+      p<sub>videoRaw</sub> = clamp((scrollY - 6vh) / 1.2vh, 0, 1)
+    </div>
+  </div>
+  <div className="border-t border-muted/20 pt-3">
+    <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Black Out & Text Maximization (7.2 vh &rarr; 8.7 vh)</div>
+    <div className="text-xl font-mono text-foreground font-semibold">
+      p<sub>darkRaw</sub> = clamp((scrollY - 7.2vh) / 1.5vh, 0, 1)
+    </div>
+  </div>
+</div>
+
+---
+
+### 2. Transition Easing Function
+To make transitions feel smooth, raw values are passed through a cubic ease-out function (organic deceleration):
+
+<div className="my-6 border border-muted/30 rounded-xl p-5 bg-muted/5 dark:bg-muted/10 font-sans space-y-4">
+  <div>
+    <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Cubic Ease-Out Deceleration Curve</div>
+    <div className="text-xl font-mono text-foreground font-semibold">
+      f(x) = 1 - (1 - x)<sup>3</sup>
+    </div>
+  </div>
+  <div className="border-t border-muted/20 pt-3">
+    <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Eased Progress Variables</div>
+    <div className="text-xl font-mono text-foreground font-semibold space-y-1">
+      <div>p<sub>video</sub> = f(p<sub>videoRaw</sub>)</div>
+      <div>p<sub>dark</sub> = f(p<sub>darkRaw</sub>)</div>
+    </div>
+  </div>
+</div>
+
+---
+
+### 3. Video Portal Dimensions
+The dimensions and properties of the expanding video container scale dynamically relative to progress:
+
+<div className="my-6 border border-muted/30 rounded-xl p-5 bg-muted/5 dark:bg-muted/10 font-sans space-y-3">
+  <div>
+    <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Dynamic Sizing & Layering Rules</div>
+    <div className="text-xl font-mono text-foreground font-semibold space-y-2">
+      <div>Width: W = W<sub>card</sub> + p<sub>video</sub> &times; (100vw - W<sub>card</sub>)</div>
+      <div>Height: H = H<sub>card</sub> + p<sub>video</sub> &times; (100vh - H<sub>card</sub>)</div>
+      <div>Border Radius: BR = 24px - p<sub>video</sub> &times; 24px</div>
+      <div>Scale: S = 0.85 + p<sub>video</sub> &times; 0.15</div>
+    </div>
+  </div>
+</div>
+
+---
+
+## 🎨 Design Principles
+
+1. **Ambient Dark Mode Grid**: Uses `#0b0c10` (core dark) layered with an active dotted background grid and grain film overlays to create depth.
+2. **Fluid Colorways**: Employs high-contrast HSL character background panels (Rusty Clay, Shinto Green, Pink Beat, Neo Sky) that transition as the user scrolls.
+3. **Winding Guidelines**: Utilizes a thin, semi-translucent white SVG curve (`stroke="rgba(255,255,255,0.18)"`) running down the right-hand margin. This line draws itself relative to page-scroll to guide the reader's eye.
+4. **Blueprints Layout**: Glow points (hotspots) on the character figurines project dashed connector lines to align with specific card descriptions.
+
+---
+
+## 🎬 Animation Techniques
+
+### 1. SplitText Letter Stagger
+Text strings are parsed into individual character spans. Each character is rendered inside an overflow-hidden wrapper, animating vertically from `translateY(110%)` to `translateY(0)` with a staggered inline delay:
+```typescript
+delay = baseDelay + (wordIndex * 3 + charIndex) * 20ms
+```
+
+### 2. Magnetic CTAs
+Tracks client coordinates relative to the button's center. If the mouse comes within a `120px` radius, the button shifts dynamically towards the cursor:
+```typescript
+xShift = mouseDeltaX * 0.4, yShift = mouseDeltaY * 0.4
+```
+
+### 3. Custom Cursor Follower (Play/Pause)
+Hides the default browser cursor (`cursor: 'none'`) inside the video container. Tracks cursor coordinates `(X, Y)` relative to the card and shifts a custom circular SVG button (`translate3d(X - Offset, Y - Offset, 0)`) under the mouse using cubic-bezier transitions.
+
+---
+
+## 📊 Scroll & Cursor Follower Hand-Drawn Sketch Explanation
+
+The Excalidraw-style sketch below breaks down the page layout coordinates, scroll-timeline increments (0vh to 9.5vh), expanding card dimensions, and cursor tracking offsets:
+
+![MOTION LAB Excalidraw Scroll & Cursor Mechanics Diagram](/assets/motion-lab-sketch.png)
