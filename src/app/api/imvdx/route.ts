@@ -10,21 +10,60 @@ function verifyPassword(password: string): boolean {
   return password === adminPassword;
 }
 
-// GET — list all media files
-export async function GET() {
+// GET — list all media files OR proxy a private blob file
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const fileUrl = searchParams.get('url');
+
+  // If a file URL is provided, proxy the request to allow viewing private blobs
+  if (fileUrl) {
+    try {
+      const token = process.env.BLOB_READ_WRITE_TOKEN;
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const res = await fetch(fileUrl, { headers });
+      if (!res.ok) {
+        return new NextResponse('Failed to fetch media file', { status: res.status });
+      }
+
+      const contentType = res.headers.get('content-type') || 'application/octet-stream';
+      return new NextResponse(res.body, {
+        headers: {
+          'Content-Type': contentType,
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      });
+    } catch (err) {
+      console.error('Media proxy error:', err);
+      return new NextResponse('Media proxy error', { status: 500 });
+    }
+  }
+
+  // Otherwise, list files
   try {
-    const { blobs } = await list({ prefix: FOLDER_PREFIX });
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    const { blobs } = await list({
+      prefix: FOLDER_PREFIX,
+      token,
+    });
 
     const files = blobs.map((blob) => ({
-      url: blob.url,
+      // Use proxy URL so private blobs render correctly for public visitors
+      url: `/api/imvdx?url=${encodeURIComponent(blob.downloadUrl || blob.url)}`,
+      rawUrl: blob.url,
       filename: blob.pathname.replace(FOLDER_PREFIX, ''),
       uploadedAt: blob.uploadedAt,
       size: blob.size,
     }));
 
     return NextResponse.json({ files });
-  } catch {
-    return NextResponse.json({ files: [] });
+  } catch (err) {
+    console.error('List error:', err);
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    return NextResponse.json({ files: [], error: message });
   }
 }
 
@@ -104,11 +143,18 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'No URL provided' }, { status: 400 });
     }
 
-    await del(url);
+    let targetUrl = url;
+    if (url.includes('/api/imvdx?url=')) {
+      targetUrl = decodeURIComponent(url.split('/api/imvdx?url=')[1]);
+    }
+
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    await del(targetUrl, { token });
 
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('Delete error:', err);
-    return NextResponse.json({ error: 'Delete failed' }, { status: 500 });
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    return NextResponse.json({ error: `Delete failed: ${message}` }, { status: 500 });
   }
 }
