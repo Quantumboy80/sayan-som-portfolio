@@ -133,23 +133,69 @@ export default function ImvdxPage() {
     );
   }
 
-  // Empty state — minimal, almost invisible
+  // Empty state — show lock button for admin, or upload zone if authenticated
   if (files.length === 0 && !isAdmin) {
     return (
-      <div className="relative flex min-h-screen items-center justify-center bg-black">
-        <p className="text-white/10 text-xs select-none">.</p>
-        {/* Hidden admin trigger */}
+      <div className="relative flex min-h-screen flex-col items-center justify-center bg-black">
         <button
           onClick={() => setShowPasswordModal(true)}
-          className="fixed bottom-4 right-4 h-8 w-8 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-center justify-center text-white/20 hover:text-white/60 border border-transparent hover:border-white/10"
-          aria-label="Admin"
+          className="group flex flex-col items-center gap-3 transition-all"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-all group-hover:border-white/20 group-hover:bg-white/10">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/30 group-hover:text-white/60 transition-colors">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <span className="text-[10px] uppercase tracking-[0.2em] text-white/15 group-hover:text-white/40 transition-colors">unlock</span>
         </button>
         {showPasswordModal && <PasswordModal password={password} setPassword={setPassword} error={passwordError} onSubmit={handleLogin} onClose={() => { setShowPasswordModal(false); setPassword(''); setPasswordError(''); }} />}
+      </div>
+    );
+  }
+
+  // Admin authenticated but no files — show upload zone
+  if (files.length === 0 && isAdmin) {
+    return (
+      <div className="relative flex min-h-screen flex-col items-center justify-center bg-black">
+        <div className="flex items-center gap-2 mb-8">
+          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-white/40 text-xs font-mono uppercase tracking-widest">Admin Mode</span>
+          <button onClick={() => { setIsAdmin(false); adminPasswordRef.current = ''; }} className="ml-3 text-white/20 hover:text-white/50 text-xs transition-colors">[Lock]</button>
+        </div>
+        <div
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+          className={`flex cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed px-16 py-12 transition-all ${dragActive ? 'border-white/30 bg-white/5' : 'border-white/10 hover:border-white/20 hover:bg-white/[0.02]'}`}
+        >
+          {isUploading ? (
+            <>
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/20 border-t-white/70" />
+              <p className="text-white/40 text-sm">{uploadProgress}</p>
+            </>
+          ) : (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/20">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" x2="12" y1="3" y2="15"/>
+              </svg>
+              <p className="text-white/30 text-sm">Drop files here or click to upload</p>
+              <p className="text-white/15 text-xs">Images & Videos · Max 100MB</p>
+            </>
+          )}
+        </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept="image/*,video/*"
+          className="hidden"
+          onChange={(e) => e.target.files && handleUpload(e.target.files)}
+        />
       </div>
     );
   }
