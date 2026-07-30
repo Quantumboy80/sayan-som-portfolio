@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     const blob = await put(`${FOLDER_PREFIX}${file.name}`, file, {
-      access: 'public',
+      access: 'private',
       addRandomSuffix: true,
     });
 
