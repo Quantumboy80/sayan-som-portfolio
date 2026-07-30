@@ -111,7 +111,10 @@ export default function ImvdxPage() {
     }
   };
 
-  const isVideo = (url: string) => /\.(mp4|webm|mov)$/i.test(url) || url.includes('video');
+  const isVideo = (filename: string, url: string) =>
+    /\.(mp4|webm|mov)/i.test(filename) ||
+    /\.(mp4|webm|mov)/i.test(url) ||
+    url.toLowerCase().includes('video');
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -279,15 +282,16 @@ export default function ImvdxPage() {
         <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
           {files.map((file) => (
             <div key={file.url} className="group relative mb-4 break-inside-avoid overflow-hidden rounded-lg bg-white/5">
-              {isVideo(file.url) ? (
+              {isVideo(file.filename, file.url) ? (
                 <video
                   src={file.url}
                   className="w-full cursor-pointer"
                   muted
                   loop
                   playsInline
+                  controls
                   onMouseEnter={(e) => (e.target as HTMLVideoElement).play()}
-                  onMouseLeave={(e) => { (e.target as HTMLVideoElement).pause(); (e.target as HTMLVideoElement).currentTime = 0; }}
+                  onMouseLeave={(e) => { (e.target as HTMLVideoElement).pause(); }}
                   onClick={() => setLightboxUrl(file.url)}
                 />
               ) : (
@@ -330,7 +334,7 @@ export default function ImvdxPage() {
               <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
             </svg>
           </button>
-          {isVideo(lightboxUrl) ? (
+          {isVideo(lightboxUrl, lightboxUrl) ? (
             <video
               src={lightboxUrl}
               className="max-h-[90vh] max-w-[90vw] rounded-lg"
