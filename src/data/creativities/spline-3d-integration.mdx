@@ -1,0 +1,56 @@
+---
+title: 'Spline 3D Integration in Modern Websites'
+description: 'Step-by-step tutorial on integrating interactive 3D assets from Spline into Next.js for high-fidelity interactive landing pages.'
+image: '/project/ramspace.png'
+tags: ['3d', 'spline', 'nextjs', 'ui-ux']
+date: '2026-07-22'
+isPublished: true
+---
+
+# Spline 3D Integration in Modern Websites
+
+Adding 3D elements to a web page creates an immersive experience that keeps users engaged. Spline is a powerful tool that makes 3D design and interaction accessible for web developers without writing complex WebGL shaders. In this post, we discuss the design principles and technical setup for 3D web design.
+
+---
+
+## The Tech Stack
+
+The application leverages a lightweight, performance-tuned frontend stack:
+
+<TechStack>
+  <TechItem name="Spline" icon="threejs" role="3D Modeling & Scene Interaction" />
+  <TechItem name="React Spline" icon="react" role="Runtime React integration library" />
+  <TechItem name="Next.js" icon="nextjs" role="Frontend framework with App Router" />
+  <TechItem name="React Suspense" icon="react" role="Asynchronous lazy loading optimization" />
+</TechStack>
+
+---
+
+## Design Principles for Web 3D
+
+1. **Optimize Model Complexity**: Keep polycounts low to minimize the download size of the `.spline` file.
+2. **Prioritize Mobile**: Fallback to high-quality 2D static images on mobile devices to prevent performance degradation and save battery.
+3. **Smooth Interactive States**: Sync mouse coordinates with camera rotations subtly to create responsiveness without causing motion sickness.
+
+---
+
+## Implementation Details
+
+Here is how you can render a Spline scene asynchronously:
+
+```javascript
+import React, { Suspense } from 'react';
+const Spline = React.lazy(() => import('@splinetool/react-spline'));
+
+export default function App() {
+  return (
+    <div className="w-full h-[500px] relative">
+      <Suspense fallback={<div className="text-center py-20">Loading 3D Scene...</div>}>
+        <Spline scene="https://prod.spline.design/your-scene-id/scene.splinecode" />
+      </Suspense>
+    </div>
+  );
+}
+```
+
+By lazy loading the component, we keep the initial bundle size low, ensuring our PageSpeed score remains high!

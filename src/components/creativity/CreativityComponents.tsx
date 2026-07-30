@@ -9,6 +9,7 @@ import GSAP from '@/components/technologies/GSAP';
 import CSS from '@/components/technologies/CSS';
 import Html from '@/components/technologies/Html';
 import Motion from '@/components/technologies/Motion';
+import NextJs from '@/components/technologies/NextJs';
 
 const techIcons: Record<string, React.ComponentType<any>> = {
   react: ReactIcon,
@@ -18,6 +19,7 @@ const techIcons: Record<string, React.ComponentType<any>> = {
   css: CSS,
   html: Html,
   motion: Motion,
+  nextjs: NextJs,
   vite: () => (
     <svg viewBox="0 0 24 24" className="size-4" fill="currentColor">
       <path fill="#646CFF" d="M12 2L2 22h20L12 2zm.5 15.5l-2.5-4h5l-2.5 4z" />
