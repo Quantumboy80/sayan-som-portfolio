@@ -58,12 +58,12 @@ export default function Github() {
       // 1. Try jogruber API (more stable and standard)
       try {
         const response = await fetch(
-          `https://github-contributions-api.jogruber.de/v4/${githubConfig.username}`
+          `https://github-contributions-api.jogruber.de/v4/${githubConfig.username}?y=last`
         );
         if (response.ok) {
-          const data = await response.json();
+          const data = (await response.json()) as { contributions?: { date: string; count: number; level: number }[] };
           if (data?.contributions && Array.isArray(data.contributions)) {
-            const validContributions = data.contributions.map((item: any) => ({
+            const validContributions = data.contributions.map((item) => ({
               date: String(item.date),
               count: Number(item.count || 0),
               level: Number(item.level || 0) as ContributionItem['level'],
@@ -72,7 +72,7 @@ export default function Github() {
             if (validContributions.length > 0) {
               const total = validContributions.reduce((sum, item) => sum + item.count, 0);
               setTotalContributions(total);
-              setContributions(filterLastYear(validContributions));
+              setContributions(validContributions);
               setIsLoading(false);
               return;
             }
@@ -88,7 +88,7 @@ export default function Github() {
           `https://github-contributions-api.deno.dev/${githubConfig.username}.json`
         );
         if (response.ok) {
-          const data: any = await response.json();
+          const data = (await response.json()) as { contributions?: unknown[] };
           if (data?.contributions && Array.isArray(data.contributions)) {
             const flattenedContributions = data.contributions.flat();
             const contributionLevelMap = {
