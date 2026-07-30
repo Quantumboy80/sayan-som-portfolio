@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { upload } from '@vercel/blob/client';
 
 type MediaFile = {
   url: string;
@@ -66,20 +67,22 @@ export default function ImvdxPage() {
 
     for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
-      setUploadProgress(`Uploading ${i + 1}/${fileList.length}: ${file.name}`);
-
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('password', adminPasswordRef.current);
+      setUploadProgress(`Uploading ${i + 1}/${fileList.length}: 0%`);
 
       try {
-        const res = await fetch('/api/imvdx', { method: 'POST', body: formData });
-        if (!res.ok) {
-          const err = await res.json();
-          alert(`Failed to upload ${file.name}: ${err.error}`);
-        }
-      } catch {
-        alert(`Failed to upload ${file.name}`);
+        await upload(`imvdx/${file.name}`, file, {
+          access: 'private',
+          handleUploadUrl: '/api/imvdx/upload',
+          clientPayload: JSON.stringify({ password: adminPasswordRef.current }),
+          onUploadProgress: (progress) => {
+            setUploadProgress(
+              `Uploading ${i + 1}/${fileList.length}: ${Math.round(progress.percentage)}%`
+            );
+          },
+        });
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Upload failed';
+        alert(`Failed to upload ${file.name}: ${msg}`);
       }
     }
 
