@@ -62,6 +62,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check token exists
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return NextResponse.json({ error: 'BLOB_READ_WRITE_TOKEN is not configured on the server.' }, { status: 500 });
+    }
+
     // Max 100MB
     if (file.size > 100 * 1024 * 1024) {
       return NextResponse.json({ error: 'File too large. Max 100MB.' }, { status: 400 });
@@ -80,7 +85,8 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     console.error('Upload error:', err);
-    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    return NextResponse.json({ error: `Upload failed: ${message}` }, { status: 500 });
   }
 }
 
