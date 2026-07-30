@@ -151,38 +151,12 @@ When hovering over projects in the **Selected Works** list:
 ### A. Component Stacking & Overlay Hierarchy
 This diagram maps how the layout layers are stacked, enabling background blending and fullscreen overlays.
 
-```mermaid
-graph TD
-    subgraph Stacking Context
-        CanvasLayer[BlobCanvas.jsx - fixed, z-index: 1]
-        PageWrapper[Page Content - relative, z-index: auto]
-        NavBoiler[Navbar - fixed, z-index: 10]
-        HoverPreview[Project Hover Video - fixed, z-index: 999]
-        OverlaySubpage[Collaboration Fullscreen Overlay - fixed, z-index: 1000]
-    end
-    CanvasLayer -->|Difference Blending| PageWrapper
-```
+![Component Stacking & Overlay Hierarchy](/assets/studio-stacking-context.png)
 
 ### B. Project Data Flow & Interaction Pipeline
 How interactions (mouse movements and scroll trigger offsets) feed into the rendering loops and animators.
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant MouseListener
-    participant GSAP_ScrollTrigger
-    participant React_DOM
-    participant Canvas_Context
-
-    User->>MouseListener: Move mouse over screen
-    MouseListener->>Canvas_Context: Push coordinates to viscous trail
-    Canvas_Context->>Canvas_Context: Draw morphing clip-path mask
-    
-    User->>GSAP_ScrollTrigger: Scroll down page
-    GSAP_ScrollTrigger->>React_DOM: Map scroll percentage to TV zoom scale
-    GSAP_ScrollTrigger->>React_DOM: Fade in philosophy overlay text
-    GSAP_ScrollTrigger->>React_DOM: Scrub image clip-path blind reveal
-```
+![Project Data Flow & Interaction Pipeline](/assets/studio-data-flow.png)
 
 ---
 
