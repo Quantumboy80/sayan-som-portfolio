@@ -52,63 +52,82 @@ export default function Github() {
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
+      setHasError(false);
+
+      // 1. Try jogruber API (more stable and standard)
       try {
-        setIsLoading(true);
         const response = await fetch(
-          `${githubConfig.apiUrl}/${githubConfig.username}.json`,
+          `https://github-contributions-api.jogruber.de/v4/${githubConfig.username}`
         );
-        const data: { contributions?: unknown[] } = await response.json();
-
-        if (data?.contributions && Array.isArray(data.contributions)) {
-          // Flatten the nested array structure
-          const flattenedContributions = data.contributions.flat();
-
-          // Convert contribution levels to numbers
-          const contributionLevelMap = {
-            NONE: 0,
-            FIRST_QUARTILE: 1,
-            SECOND_QUARTILE: 2,
-            THIRD_QUARTILE: 3,
-            FOURTH_QUARTILE: 4,
-          };
-
-          // Transform to the expected format
-          const validContributions = flattenedContributions
-            .filter(
-              (item: unknown): item is GitHubContributionResponse =>
-                typeof item === 'object' &&
-                item !== null &&
-                'date' in item &&
-                'contributionCount' in item &&
-                'contributionLevel' in item,
-            )
-            .map((item: GitHubContributionResponse) => ({
+        if (response.ok) {
+          const data = await response.json();
+          if (data?.contributions && Array.isArray(data.contributions)) {
+            const validContributions = data.contributions.map((item: any) => ({
               date: String(item.date),
-              count: Number(item.contributionCount || 0),
-              level: (contributionLevelMap[
-                item.contributionLevel as keyof typeof contributionLevelMap
-              ] || 0) as ContributionItem['level'],
+              count: Number(item.count || 0),
+              level: Number(item.level || 0) as ContributionItem['level'],
             }));
 
-          if (validContributions.length > 0) {
-            // Calculate total contributions
-            const total = validContributions.reduce(
-              (sum, item) => sum + item.count,
-              0,
-            );
-            setTotalContributions(total);
-
-            // Filter to show only the past year
-            const filteredContributions = filterLastYear(validContributions);
-            setContributions(filteredContributions);
-          } else {
-            setHasError(true);
+            if (validContributions.length > 0) {
+              const total = validContributions.reduce((sum, item) => sum + item.count, 0);
+              setTotalContributions(total);
+              setContributions(filterLastYear(validContributions));
+              setIsLoading(false);
+              return;
+            }
           }
-        } else {
-          setHasError(true);
         }
       } catch (err) {
-        console.error('Failed to fetch GitHub contributions:', err);
+        console.warn('Primary GitHub contributions API failed, trying fallback...', err);
+      }
+
+      // 2. Fallback to deno.dev API
+      try {
+        const response = await fetch(
+          `https://github-contributions-api.deno.dev/${githubConfig.username}.json`
+        );
+        if (response.ok) {
+          const data: any = await response.json();
+          if (data?.contributions && Array.isArray(data.contributions)) {
+            const flattenedContributions = data.contributions.flat();
+            const contributionLevelMap = {
+              NONE: 0,
+              FIRST_QUARTILE: 1,
+              SECOND_QUARTILE: 2,
+              THIRD_QUARTILE: 3,
+              FOURTH_QUARTILE: 4,
+            };
+
+            const validContributions = flattenedContributions
+              .filter(
+                (item: unknown): item is GitHubContributionResponse =>
+                  typeof item === 'object' &&
+                  item !== null &&
+                  'date' in item &&
+                  'contributionCount' in item &&
+                  'contributionLevel' in item,
+              )
+              .map((item: GitHubContributionResponse) => ({
+                date: String(item.date),
+                count: Number(item.contributionCount || 0),
+                level: (contributionLevelMap[
+                  item.contributionLevel as keyof typeof contributionLevelMap
+                ] || 0) as ContributionItem['level'],
+              }));
+
+            if (validContributions.length > 0) {
+              const total = validContributions.reduce((sum, item) => sum + item.count, 0);
+              setTotalContributions(total);
+              setContributions(filterLastYear(validContributions));
+              setIsLoading(false);
+              return;
+            }
+          }
+        }
+        setHasError(true);
+      } catch (err) {
+        console.error('All GitHub contributions APIs failed:', err);
         setHasError(true);
       } finally {
         setIsLoading(false);
