@@ -202,17 +202,18 @@ export default function ImvdxPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Admin controls */}
+      {/* Admin toggle button when viewing gallery as visitor */}
       {!isAdmin && (
         <button
           onClick={() => setShowPasswordModal(true)}
-          className="fixed bottom-4 right-4 z-50 h-8 w-8 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-center justify-center text-white/20 hover:text-white/60 border border-transparent hover:border-white/10"
-          aria-label="Admin"
+          className="fixed top-4 right-4 z-50 flex items-center gap-1.5 rounded-full border border-white/10 bg-black/60 px-3 py-1.5 text-xs text-white/40 backdrop-blur-md hover:border-white/20 hover:bg-black/90 hover:text-white/80 transition-all shadow-lg"
+          aria-label="Admin Access"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
+          <span>Admin</span>
         </button>
       )}
 
