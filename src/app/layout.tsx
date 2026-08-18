@@ -10,6 +10,7 @@ import ReactLenis from 'lenis/react';
 import { ViewTransitions } from 'next-view-transitions';
 import TransitionErrorCatcher from '@/components/common/TransitionErrorCatcher';
 import NowPlaying from '@/components/common/NowPlaying';
+import { SearchDialog } from '@/components/common/SearchDialog';
  
 import './globals.css';
  
@@ -77,7 +78,7 @@ export default function RootLayout({
                 "email": siteConfig.author.email,
                 "jobTitle": "Full Stack Software Engineer",
                 "description": siteConfig.description,
-              }),
+                }),
             }}
           />
           <ThemeProvider
@@ -95,6 +96,7 @@ export default function RootLayout({
               <Footer />
               <NowPlaying />
               <ChatBubble />
+              <SearchDialog />
               <UmamiAnalytics />
             </ReactLenis>
           </ThemeProvider>

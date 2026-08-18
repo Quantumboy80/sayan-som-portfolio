@@ -6,6 +6,7 @@ import React from 'react';
 
 import Container from './Container';
 import { ThemeToggleButton } from './ThemeSwitch';
+import { SearchTrigger } from './SearchTrigger';
 
 export default async function Navbar() {
   const settings = await getSettings();
@@ -45,6 +46,7 @@ export default async function Navbar() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <SearchTrigger />
           <ThemeToggleButton variant="circle" start="top-right" blur />
         </div>
       </div>
