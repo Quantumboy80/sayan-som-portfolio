@@ -1,8 +1,9 @@
-# Sleek Portfolio by ramxcodes
+# sayan som portfolio 
 
 A modern, responsive portfolio website built with Next.js 15, TypeScript, Tailwind CSS, and Shadcn UI. Features a blog system, project showcase, work experience timeline, and contact form with Telegram integration.
 
-![Portfolio Preview](/public/meta/hero.png)
+<img width="883" height="686" alt="image" src="https://github.com/user-attachments/assets/2f8077cb-259d-43fe-9748-8d4d36ea0314" />
+
 
 ## Deploy
 
