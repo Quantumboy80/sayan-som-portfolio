@@ -11,6 +11,7 @@ import { ViewTransitions } from 'next-view-transitions';
 import TransitionErrorCatcher from '@/components/common/TransitionErrorCatcher';
 import NowPlaying from '@/components/common/NowPlaying';
 import { SearchDialog } from '@/components/common/SearchDialog';
+import AiSwarm from '@/components/common/AiSwarm';
  
 import './globals.css';
  
@@ -97,6 +98,7 @@ export default function RootLayout({
               <NowPlaying />
               <ChatBubble />
               <SearchDialog />
+              <AiSwarm />
               <UmamiAnalytics />
             </ReactLenis>
           </ThemeProvider>
