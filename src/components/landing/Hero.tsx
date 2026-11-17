@@ -7,6 +7,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import Container from '../common/Container';
+import HeroMascot from '../common/HeroMascot';
 import Skill from '../common/Skill';
 import CV from '../svgs/CV';
 import Chat from '../svgs/Chat';
@@ -64,14 +65,26 @@ export default async function Hero() {
 
   return (
     <Container className="mx-auto max-w-5xl">
-      {/* Image */}
-      <Image
-        src={avatar}
-        alt="hero"
-        width={100}
-        height={100}
-        className="size-24 rounded-full bg-blue-300 dark:bg-yellow-300"
-      />
+      {/* Image / Mascot */}
+      {heroConfig.mascot?.enabled ? (
+        <div data-oneko-dodge="true" className="size-24 shrink-0">
+          <HeroMascot
+            directions={heroConfig.mascot.directions}
+            reactions={heroConfig.mascot.reactions}
+            size={heroConfig.mascot.size ?? 96}
+            fallbackSrc={avatar}
+            label={`${name}'s mascot`}
+          />
+        </div>
+      ) : (
+        <Image
+          src={avatar}
+          alt="hero"
+          width={100}
+          height={100}
+          className="size-24 rounded-full bg-blue-300 dark:bg-yellow-300"
+        />
+      )}
 
       {/* Text Area */}
       <div className="mt-8 flex flex-col gap-2">
