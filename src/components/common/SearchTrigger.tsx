@@ -19,13 +19,15 @@ export function SearchTrigger() {
   return (
     <button
       onClick={handleOpenSearch}
-      className="flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 hover:bg-neutral-100 hover:border-neutral-300 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-white/20 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all shadow-sm cursor-pointer"
+      type="button"
+      aria-label="Search"
+      className="group flex h-9 shrink-0 items-center gap-2 rounded-lg border border-neutral-200/90 bg-neutral-100/60 px-2.5 sm:px-3 text-xs text-neutral-500 transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-100 hover:text-neutral-900 dark:border-white/10 dark:bg-white/5 dark:text-neutral-400 dark:hover:border-white/20 dark:hover:bg-white/10 dark:hover:text-white cursor-pointer active:scale-95"
     >
-      <Search className="h-3.5 w-3.5" />
-      <span>Search</span>
-      <span className="text-[9px] text-neutral-400 dark:text-neutral-500 font-mono px-1 py-0.2 rounded border border-neutral-200 dark:border-white/10 bg-neutral-100 dark:bg-black/30 select-none">
+      <Search className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:scale-110" />
+      <span className="hidden sm:inline font-medium">Search</span>
+      <kbd className="hidden sm:inline-flex items-center rounded border border-neutral-200 bg-neutral-200/60 px-1.5 py-0.5 font-mono text-[10px] text-neutral-500 select-none dark:border-white/10 dark:bg-white/10 dark:text-neutral-400">
         {isMac ? '⌘K' : 'Ctrl+K'}
-      </span>
+      </kbd>
     </button>
   );
 }

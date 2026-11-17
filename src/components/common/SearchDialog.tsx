@@ -30,7 +30,6 @@ export function SearchDialog() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   // Listen for Cmd+K or Ctrl+K and Escape
   useEffect(() => {
@@ -97,7 +96,7 @@ export function SearchDialog() {
       } finally {
         setIsLoading(false);
       }
-    }, 250);
+    }, 200);
 
     return () => clearTimeout(delayDebounceFn);
   }, [query, filterType]);
@@ -118,7 +117,7 @@ export function SearchDialog() {
           regex.test(part) ? (
             <mark
               key={i}
-              className="mx-0.5 rounded bg-amber-500/90 px-1 py-0.2 text-black font-semibold inline-block leading-none text-sm align-middle"
+              className="mx-0.5 rounded bg-amber-400/35 text-amber-900 dark:bg-amber-400/40 dark:text-amber-200 px-1 py-[1px] font-semibold inline-block leading-none text-sm align-middle"
             >
               {part}
             </mark>
@@ -144,14 +143,14 @@ export function SearchDialog() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 pt-[15vh] backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 px-4 pt-[12vh] sm:pt-[15vh] backdrop-blur-sm animate-in fade-in duration-200">
       {/* Click outside overlay to close */}
       <div className="fixed inset-0 cursor-default" onClick={() => setIsOpen(false)} />
 
       {/* Search Card */}
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-xl border border-white/10 bg-neutral-900 shadow-2xl transition-all max-h-[60vh] flex flex-col">
+      <div className="relative w-full max-w-2xl overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-2xl transition-all max-h-[65vh] flex flex-col dark:border-white/10 dark:bg-neutral-900">
         {/* Search Input Area */}
-        <div className="flex items-center px-4 py-4">
+        <div className="flex items-center px-4 py-3.5">
           <Search className="mr-3 h-5 w-5 text-neutral-400 shrink-0" />
           <input
             ref={inputRef}
@@ -159,33 +158,36 @@ export function SearchDialog() {
             placeholder="Search posts, projects and content..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-transparent text-white placeholder-neutral-500 outline-none text-base"
+            className="w-full bg-transparent text-neutral-900 placeholder-neutral-400 outline-none text-base dark:text-white dark:placeholder-neutral-500"
           />
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin text-neutral-400 mr-2 shrink-0" />
           ) : null}
-          <div className="flex items-center gap-1 text-[10px] text-neutral-400 border border-white/15 bg-white/5 rounded px-1.5 py-0.5 font-mono select-none">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-1 text-[10px] text-neutral-400 border border-neutral-200 bg-neutral-100 hover:bg-neutral-200 dark:border-white/15 dark:bg-white/5 dark:hover:bg-white/10 rounded px-1.5 py-0.5 font-mono select-none cursor-pointer transition-colors"
+          >
             ESC
-          </div>
+          </button>
         </div>
 
         {/* Separator */}
-        <div className="h-px bg-white/10 w-full" />
+        <div className="h-px bg-neutral-200 dark:bg-white/10 w-full" />
 
         {/* Filter Area */}
-        <div className="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-neutral-900/50 shrink-0">
+        <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-200 dark:border-white/5 bg-neutral-50/80 dark:bg-neutral-900/50 shrink-0">
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 text-xs text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors cursor-pointer"
             >
-              <span>Filter</span>
-              <span className="font-semibold text-white">{getFilterLabel(filterType)}</span>
+              <span>Filter:</span>
+              <span className="font-semibold text-neutral-900 dark:text-white">{getFilterLabel(filterType)}</span>
               <ChevronDown className="h-3 w-3" />
             </button>
 
             {showDropdown && (
-              <div className="absolute left-0 mt-1 z-10 w-36 rounded-md border border-white/10 bg-neutral-950 p-1 shadow-lg animate-in slide-in-from-top-1 duration-150">
+              <div className="absolute left-0 mt-1 z-10 w-36 rounded-md border border-neutral-200 bg-white dark:border-white/10 dark:bg-neutral-950 p-1 shadow-lg animate-in slide-in-from-top-1 duration-150">
                 {['all', 'blog', 'projects', 'creativities'].map((type) => (
                   <button
                     key={type}
@@ -193,8 +195,8 @@ export function SearchDialog() {
                       setFilterType(type);
                       setShowDropdown(false);
                     }}
-                    className={`w-full text-left rounded px-2 py-1 text-xs transition-colors hover:bg-white/10 ${
-                      filterType === type ? 'text-amber-400 font-medium' : 'text-neutral-300'
+                    className={`w-full text-left rounded px-2 py-1 text-xs transition-colors hover:bg-neutral-100 dark:hover:bg-white/10 cursor-pointer ${
+                      filterType === type ? 'text-amber-500 dark:text-amber-400 font-semibold' : 'text-neutral-700 dark:text-neutral-300'
                     }`}
                   >
                     {getFilterLabel(type)}
@@ -203,19 +205,24 @@ export function SearchDialog() {
               </div>
             )}
           </div>
+          {results.length > 0 && (
+            <span className="text-[11px] text-neutral-400 font-mono">
+              {results.length} result{results.length === 1 ? '' : 's'}
+            </span>
+          )}
         </div>
 
         {/* Search Results Area */}
         <div className="overflow-y-auto flex-1 p-2 space-y-4">
           {query.trim() === '' ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Search className="h-8 w-8 text-neutral-500 mb-2" />
-              <p className="text-sm text-neutral-400">Type to start searching...</p>
-              <p className="text-xs text-neutral-600 mt-1">Press ⌘ K or Ctrl+K anytime</p>
+              <Search className="h-8 w-8 text-neutral-400 dark:text-neutral-600 mb-2" />
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 font-medium">Type to start searching...</p>
+              <p className="text-xs text-neutral-400 dark:text-neutral-600 mt-1">Press ⌘K or Ctrl+K anytime</p>
             </div>
           ) : results.length === 0 ? (
             <div className="py-12 text-center">
-              <p className="text-sm text-neutral-400">No results found for &quot;{query}&quot;</p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">No results found for &quot;{query}&quot;</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -231,23 +238,23 @@ export function SearchDialog() {
                     </div>
                     <div className="space-y-1">
                       {groupResults.map((item) => (
-                        <div key={item.slug} className="rounded-lg hover:bg-white/5 transition-colors p-2">
+                        <div key={item.slug} className="rounded-lg hover:bg-neutral-100 dark:hover:bg-white/5 transition-colors p-2">
                           <Link
                             href={item.href}
                             onClick={() => setIsOpen(false)}
                             className="block"
                           >
                             {/* Result Title */}
-                            <div className="font-medium text-sm text-neutral-100 hover:text-white transition-colors">
+                            <div className="font-medium text-sm text-neutral-900 dark:text-neutral-100 hover:text-primary transition-colors">
                               <HighlightText text={item.title} highlight={query} />
                             </div>
 
                             {/* Match Snippets */}
-                            <div className="mt-1.5 space-y-1 pl-2 border-l border-white/5">
+                            <div className="mt-1.5 space-y-1 pl-2 border-l border-neutral-200 dark:border-white/10">
                               {item.matches.map((match, idx) => (
                                 <div
                                   key={idx}
-                                  className="text-xs text-neutral-400 leading-relaxed font-light"
+                                  className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed font-light"
                                 >
                                   <HighlightText text={match.line} highlight={query} />
                                 </div>

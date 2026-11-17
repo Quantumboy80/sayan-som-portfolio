@@ -52,7 +52,12 @@ export async function GET(request: NextRequest) {
 
   for (const { dir, type: itemType, hrefPrefix } of searchDirs) {
     // Apply type filter if not 'all'
-    if (type !== 'all' && type.toLowerCase() !== itemType.toLowerCase() + 's') {
+    if (
+      type !== 'all' &&
+      type.toLowerCase() !== itemType.toLowerCase() &&
+      type.toLowerCase() !== itemType.toLowerCase() + 's' &&
+      !(type.toLowerCase() === 'creativities' && itemType.toLowerCase() === 'creativity')
+    ) {
       continue;
     }
 
