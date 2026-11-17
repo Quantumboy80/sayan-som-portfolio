@@ -56,12 +56,6 @@ export const heroConfig = {
   name: 'Sayan',
   title: 'An aspiring software developer.',
   avatar: '/assets/luffy_avatar.jpg',
-  mascot: {
-    enabled: false,
-    directions: '/mascots/ram-directions.webp',
-    reactions: '/mascots/ram-reactions.webp',
-    size: 96,
-  },
 
   // Skills Configuration
   skills: [

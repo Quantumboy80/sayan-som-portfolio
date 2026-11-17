@@ -1,242 +1,254 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 
-const DIRECTIONS = [
-  'up-left',
-  'up',
-  'up-right',
-  'left',
-  'center',
-  'right',
-  'down-left',
-  'down',
-  'down-right',
-] as const;
+interface EmotionParticle {
+  id: number;
+  emoji: string;
+  x: number;
+  y: number;
+}
 
-const REACTIONS = [
-  'blink',
-  'heart',
-  'sparkle',
-  'surprised',
-  'wink',
-  'bashful',
-  'sleepy',
-  'dizzy',
-  'delighted',
-] as const;
+const SINGLE_CLICK_EMOJIS = ['❤️', '✨', '🍖', '😄', '🔥'];
 
-const ANGLE_DIRECTIONS = [
-  'right',
-  'down-right',
-  'down',
-  'down-left',
-  'left',
-  'up-left',
-  'up',
-  'up-right',
-] as const;
-
-const STEP_ANGLE = (2 * Math.PI) / ANGLE_DIRECTIONS.length;
-const RANDOM_REACTIONS = ['heart', 'sparkle', 'delighted'] as const;
-
-// Keyframes for the squash-and-stretch boop animation
+// Squish-and-stretch bounce keyframes
 const SQUISH_KEYFRAMES: Keyframe[] = [
   { transform: 'scale(1, 1)', easing: 'ease-in' },
-  { transform: 'scale(1.10, 0.86)', offset: 0.18, easing: 'ease-out' },
-  { transform: 'scale(0.95, 1.08)', offset: 0.45, easing: 'ease-in-out' },
-  { transform: 'scale(1.03, 0.97)', offset: 0.72, easing: 'ease-in-out' },
+  { transform: 'scale(1.18, 0.82)', offset: 0.18, easing: 'ease-out' },
+  { transform: 'scale(0.92, 1.12)', offset: 0.45, easing: 'ease-in-out' },
+  { transform: 'scale(1.05, 0.96)', offset: 0.72, easing: 'ease-in-out' },
   { transform: 'scale(1, 1)' },
 ];
 
-function getSpritePosition(index: number) {
-  const col = index % 3;
-  const row = Math.floor(index / 3);
-  return {
-    backgroundPosition: `${col * 50}% ${row * 50}%`,
-  };
-}
-
-const SPRITE_BASE_STYLE: React.CSSProperties = {
-  position: 'absolute',
-  inset: 0,
-  backgroundSize: '300% 300%',
-  backgroundRepeat: 'no-repeat',
-  imageRendering: 'pixelated',
-  transition: 'opacity 0.08s ease-out',
-};
-
 interface HeroMascotProps {
-  directions?: string;
-  reactions?: string;
+  src?: string;
   size?: number;
   className?: string;
   label?: string;
-  fallbackSrc?: string;
 }
 
 export default function HeroMascot({
-  directions = '/mascots/ram-directions.webp',
-  reactions = '/mascots/ram-reactions.webp',
+  src = '/assets/luffy_avatar.jpg',
   size = 96,
   className = '',
-  label = 'mascot',
+  label = "Sayan's avatar",
 }: HeroMascotProps) {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const spanRef = useRef<HTMLSpanElement>(null);
-  const timeoutsRef = useRef<number[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const avatarRef = useRef<HTMLDivElement>(null);
   const clickTrackerRef = useRef({ count: 0, at: 0 });
+  const timersRef = useRef<number[]>([]);
 
-  const [direction, setDirection] = useState<string>('center');
-  const [reaction, setReaction] = useState<string | null>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0, glareX: 50, glareY: 50 });
+  const [isDizzy, setIsDizzy] = useState(false);
+  const [particles, setParticles] = useState<EmotionParticle[]>([]);
 
-  // Track cursor movement and update gaze direction
+  // Smooth mouse tracking with 3D perspective tilt
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
-    let currentDirIdx = -1;
-    let coords: { x: number; y: number } | null = null;
+    const handlePointerMove = (e: PointerEvent) => {
+      const container = containerRef.current;
+      if (!container || isDizzy) return;
 
-    const handleCalculate = () => {
-      const btn = buttonRef.current;
-      if (!btn || !coords) return;
-
-      const rect = btn.getBoundingClientRect();
+      const rect = container.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const dx = coords.x - centerX;
-      const dy = coords.y - centerY;
 
-      // Within 70px dead zone: look straight at screen
-      if (Math.hypot(dx, dy) < 70) {
-        currentDirIdx = -1;
-        setDirection('center');
+      const dx = e.clientX - centerX;
+      const dy = e.clientY - centerY;
+      const dist = Math.hypot(dx, dy);
+
+      // Dead-zone: looking straight ahead when mouse is within 40px
+      if (dist < 40) {
+        setTilt({ x: 0, y: 0, glareX: 50, glareY: 50 });
         return;
       }
 
-      const angle = Math.atan2(dy, dx);
-      let diff: number;
+      // Max tilt degrees: +/- 18 deg
+      const maxTilt = 18;
+      const rotY = Math.max(-maxTilt, Math.min(maxTilt, (dx / (window.innerWidth / 2)) * maxTilt));
+      const rotX = Math.max(-maxTilt, Math.min(maxTilt, -(dy / (window.innerHeight / 2)) * maxTilt));
 
-      // Avoid jitter when close to boundary
-      if (
-        currentDirIdx !== -1 &&
-        Math.abs(
-          Math.atan2(Math.sin((diff = angle - currentDirIdx * STEP_ANGLE)), Math.cos(diff))
-        ) <
-          STEP_ANGLE / 2 + 0.12
-      ) {
-        return;
-      }
+      // Glare reflection position (0% - 100%)
+      const glareX = Math.max(0, Math.min(100, 50 + (dx / window.innerWidth) * 50));
+      const glareY = Math.max(0, Math.min(100, 50 + (dy / window.innerHeight) * 50));
 
-      currentDirIdx =
-        (Math.round(angle / STEP_ANGLE) + ANGLE_DIRECTIONS.length) % ANGLE_DIRECTIONS.length;
-      setDirection(ANGLE_DIRECTIONS[currentDirIdx]);
+      setTilt({ x: rotX, y: rotY, glareX, glareY });
     };
 
-    const handlePointerMove = (e: PointerEvent) => {
-      coords = { x: e.clientX, y: e.clientY };
-      handleCalculate();
+    const handlePointerLeave = () => {
+      setTilt({ x: 0, y: 0, glareX: 50, glareY: 50 });
     };
 
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
-    window.addEventListener('scroll', handleCalculate, { passive: true });
+    document.addEventListener('mouseleave', handlePointerLeave);
 
     return () => {
       window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('scroll', handleCalculate);
+      document.removeEventListener('mouseleave', handlePointerLeave);
     };
-  }, []);
+  }, [isDizzy]);
 
-  // Clear pending timers on unmount
+  // Clean up timers
   useEffect(() => {
     return () => {
-      timeoutsRef.current.forEach((t) => window.clearTimeout(t));
+      timersRef.current.forEach((t) => window.clearTimeout(t));
     };
   }, []);
 
-  const handleClick = () => {
-    timeoutsRef.current.forEach((t) => window.clearTimeout(t));
-    timeoutsRef.current = [];
-
-    const schedule = (delay: number, nextReaction: string | null) => {
-      const timeoutId = window.setTimeout(() => setReaction(nextReaction), delay);
-      timeoutsRef.current.push(timeoutId);
-    };
+  const handleClick = useCallback(() => {
+    timersRef.current.forEach((t) => window.clearTimeout(t));
+    timersRef.current = [];
 
     const now = Date.now();
     const tracker = clickTrackerRef.current;
     tracker.count = now - tracker.at < 1600 ? tracker.count + 1 : 1;
     tracker.at = now;
 
-    // 4+ rapid clicks trigger dizzy mode
+    // Bounce squash & stretch
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && avatarRef.current) {
+      avatarRef.current.animate(SQUISH_KEYFRAMES, { duration: 420, easing: 'ease-out' });
+    }
+
+    // 4+ rapid clicks: DIZZY MODE!
     if (tracker.count >= 4) {
       tracker.count = 0;
-      setReaction('dizzy');
-      schedule(1100, null);
+      setIsDizzy(true);
+
+      // Spawn dizzy stars
+      const dizzyId = Date.now();
+      setParticles((prev) => [
+        ...prev,
+        { id: dizzyId, emoji: '💫', x: 20, y: -25 },
+        { id: dizzyId + 1, emoji: '😵‍💫', x: 55, y: -20 },
+      ]);
+
+      const t1 = window.setTimeout(() => {
+        setIsDizzy(false);
+        setParticles((prev) => prev.filter((p) => p.id !== dizzyId && p.id !== dizzyId + 1));
+      }, 1400);
+      timersRef.current.push(t1);
     } else {
-      setReaction('blink');
-      schedule(120, RANDOM_REACTIONS[(tracker.count - 1) % RANDOM_REACTIONS.length]);
-      schedule(560, null);
-    }
+      // Normal click: spawn floating emotion particle
+      const emoji = SINGLE_CLICK_EMOJIS[(tracker.count - 1) % SINGLE_CLICK_EMOJIS.length];
+      const pId = Date.now() + Math.random();
+      const offsetX = 15 + Math.random() * 40;
+      const offsetY = -15 - Math.random() * 15;
 
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      spanRef.current?.animate(SQUISH_KEYFRAMES, { duration: 420, easing: 'linear' });
-    }
-  };
+      setParticles((prev) => [...prev, { id: pId, emoji, x: offsetX, y: offsetY }]);
 
-  const directionIdx = DIRECTIONS.indexOf(direction as any);
-  const reactionIdx = REACTIONS.indexOf((reaction ?? 'blink') as any);
+      const t = window.setTimeout(() => {
+        setParticles((prev) => prev.filter((p) => p.id !== pId));
+      }, 900);
+      timersRef.current.push(t);
+    }
+  }, []);
 
   return (
-    <button
-      ref={buttonRef}
-      type="button"
-      onClick={handleClick}
-      aria-label={`Boop the ${label}`}
-      className={`group relative select-none cursor-pointer outline-none transition-transform hover:scale-105 active:scale-95 ${className}`}
-      style={{
-        position: 'relative',
-        display: 'block',
-        flexShrink: 0,
-        width: size,
-        height: size,
-        padding: 0,
-        border: 0,
-        background: 'transparent',
-        appearance: 'none',
-      }}
+    <div
+      ref={containerRef}
+      data-oneko-dodge="true"
+      className={`relative inline-block select-none ${className}`}
+      style={{ width: size, height: size, perspective: 1000 }}
     >
-      <span
-        ref={spanRef}
-        style={{
-          position: 'relative',
-          display: 'block',
-          width: '100%',
-          height: '100%',
-          transformOrigin: '50% 78%',
-        }}
-      >
-        {/* Direction Sprite (Gaze Tracking) */}
+      {/* Floating Emotion Particles */}
+      {particles.map((p) => (
         <span
+          key={p.id}
+          className="pointer-events-none absolute z-30 select-none text-2xl animate-in fade-in zoom-in-75 duration-200"
           style={{
-            ...SPRITE_BASE_STYLE,
-            backgroundImage: `url(${directions})`,
-            ...getSpritePosition(directionIdx !== -1 ? directionIdx : 4),
-            opacity: reaction ? 0 : 1,
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            animation: 'heroParticleFloat 0.9s ease-out forwards',
           }}
-        />
+        >
+          {p.emoji}
+        </span>
+      ))}
 
-        {/* Reaction Sprite (Emotion on Click) */}
-        <span
+      {/* Interactive Avatar Button */}
+      <button
+        type="button"
+        onClick={handleClick}
+        aria-label={`Boop ${label}`}
+        className="relative block h-full w-full cursor-pointer rounded-full p-0 border-0 bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+      >
+        <div
+          ref={avatarRef}
+          className={`relative h-full w-full overflow-hidden rounded-full border-2 border-neutral-200/90 shadow-md transition-shadow duration-300 hover:shadow-xl dark:border-white/20 ${
+            isDizzy ? 'animate-dizzy-shake' : ''
+          }`}
           style={{
-            ...SPRITE_BASE_STYLE,
-            backgroundImage: `url(${reactions})`,
-            ...getSpritePosition(reactionIdx !== -1 ? reactionIdx : 0),
-            opacity: reaction ? 1 : 0,
+            transformStyle: 'preserve-3d',
+            transform: isDizzy
+              ? undefined
+              : `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(1, 1, 1)`,
+            transition: isDizzy ? 'none' : 'transform 0.12s ease-out',
           }}
-        />
-      </span>
-    </button>
+        >
+          {/* Avatar Image */}
+          <Image
+            src={src}
+            alt={label}
+            width={size}
+            height={size}
+            priority
+            className="h-full w-full object-cover transition-transform duration-300 pointer-events-none"
+          />
+
+          {/* Dynamic 3D Glare Lighting Overlay */}
+          <div
+            className="pointer-events-none absolute inset-0 rounded-full mix-blend-overlay transition-opacity duration-300"
+            style={{
+              background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 70%)`,
+              opacity: isDizzy ? 0 : 0.8,
+            }}
+          />
+        </div>
+      </button>
+
+      {/* Embedded CSS for custom particle float and dizzy shake */}
+      <style jsx global>{`
+        @keyframes heroParticleFloat {
+          0% {
+            opacity: 1;
+            transform: translateY(0) scale(0.8);
+          }
+          50% {
+            opacity: 1;
+            transform: translateY(-20px) scale(1.2);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-40px) scale(0.9);
+          }
+        }
+
+        @keyframes dizzyShake {
+          0%,
+          100% {
+            transform: rotate(0deg) scale(0.96);
+          }
+          20% {
+            transform: rotate(-12deg) scale(0.96);
+          }
+          40% {
+            transform: rotate(10deg) scale(0.96);
+          }
+          60% {
+            transform: rotate(-8deg) scale(0.96);
+          }
+          80% {
+            transform: rotate(8deg) scale(0.96);
+          }
+        }
+
+        .animate-dizzy-shake {
+          animation: dizzyShake 0.28s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
   );
 }
